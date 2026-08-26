@@ -50,6 +50,7 @@ xcodebuild archive \
   -configuration Release \
   -destination 'generic/platform=macOS' \
   -archivePath "$ARCHIVE" \
+  -allowProvisioningUpdates \
   DEVELOPMENT_TEAM="$TEAM" \
   ARCHS="x86_64 arm64" \
   ONLY_ACTIVE_ARCH=NO
@@ -57,7 +58,8 @@ xcodebuild archive \
 xcodebuild -exportArchive \
   -archivePath "$ARCHIVE" \
   -exportOptionsPlist "$options" \
-  -exportPath "$BUILD_DIR/export"
+  -exportPath "$BUILD_DIR/export" \
+  -allowProvisioningUpdates
 
 APP="$BUILD_DIR/export/MangoAccounting.app"
 print "\n--- signature ---"
@@ -68,7 +70,14 @@ print "\n--- version ---"
 print "\n--- architectures ---"
 lipo -archs "$APP/Contents/MacOS/MangoAccounting" | sed 's/^/  /'
 
+# Zip with ditto, not the Finder or `zip`: it preserves the extended attributes
+# the code signature depends on, so the app still validates after transfer.
+ZIP="$BUILD_DIR/MangoAccounting-$( /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist" ).zip"
+rm -f "$ZIP"
+ditto -c -k --keepParent "$APP" "$ZIP"
+
 print "\nBuilt: $APP"
+print "Send:  $ZIP"
 if [[ "$mode" == "development" ]]; then
   print "\nNOTE: development-signed. Users must right-click the app and choose Open"
   print "the first time, because it is not notarised."
