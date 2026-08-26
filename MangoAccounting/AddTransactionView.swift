@@ -136,10 +136,10 @@ struct AddTransactionView: View {
                     attachmentType = "pdf"
                     attachmentFilename = url.lastPathComponent
                 } catch {
-                    print("Error reading PDF data: \(error.localizedDescription)")
+                    saveErrorMessage = error.localizedDescription
                 }
             case .failure(let error):
-                print("Error picking file: \(error.localizedDescription)")
+                saveErrorMessage = error.localizedDescription
             }
         }
         .onChange(of: type) {

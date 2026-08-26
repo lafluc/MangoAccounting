@@ -87,6 +87,10 @@ class DocumentListViewModel: ObservableObject {
 
 struct DocumentListView: View {
     @StateObject private var viewModel = DocumentListViewModel()
+    // Held only to hand on to the invoice editor below. A sheet does inherit the
+    // environment, but InvoiceGeneratorView requires this object and would trap if
+    // it ever did not — so it is passed explicitly rather than relied upon.
+    @EnvironmentObject private var tabManager: TabSelectionManager
     @State private var documentToDelete: SavedDocument?
     @State private var showDeleteConfirmation = false
     @State private var searchQuery: String = ""
@@ -119,6 +123,7 @@ struct DocumentListView: View {
                     initialDraft: target.draft
                 )
             }
+            .environmentObject(tabManager)
             .frame(minWidth: 560, idealWidth: 680, minHeight: 560, idealHeight: 760)
         }
         .fileExporter(isPresented: $isExporting, document: documentToExport, contentType: .pdf) { result in
