@@ -42,6 +42,13 @@ struct AddAssetView: View {
 
     @State private var showDeleteConfirmation = false
     @State private var saveErrorMessage: String?
+    @State private var hasLoadedAsset = false
+    /// True while `loadAssetOnce()` writes stored values into the form, so the
+    /// pickers' onChange handlers stand down.
+    @State private var isApplyingStoredValues = false
+    /// The rate implied by the stored amounts, kept so an untouched edit re-saves
+    /// the original CHF figure instead of one recomputed from a rounded rate.
+    @State private var storedExchangeRate: Double = 1.0
 
     private var basePriceCHF: Double? {
         guard let original = originalPriceInput else { return nil }
@@ -160,6 +167,11 @@ struct AddAssetView: View {
                                 }
                                 .pickerStyle(.menu)
                                 .onChange(of: selectedAssetCategory) {
+                                    // Skipped while loading a stored asset:
+                                    // assigning the matched class used to fire this
+                                    // handler and rewrite the asset's own rate and
+                                    // linear flag, which then got saved back.
+                                    guard !isApplyingStoredValues else { return }
                                     if selectedAssetCategory != .custom {
                                         depreciationRate = selectedAssetCategory.defaultDegressiveRate
                                         isLinear = false
@@ -171,6 +183,7 @@ struct AddAssetView: View {
                                 Toggle("Linear Depreciation", isOn: $isLinear)
                                     .tint(AppTheme.accent)
                                     .onChange(of: isLinear) {
+                                        guard !isApplyingStoredValues else { return }
                                         if let currentRate = depreciationRate, selectedAssetCategory != .custom {
                                             if isLinear {
                                                 depreciationRate = currentRate / 2.0
@@ -185,7 +198,7 @@ struct AddAssetView: View {
                                 HStack {
                                     Text("Yearly Rate (%)")
                                     Spacer()
-                                    TextField("e.g. 40", value: $depreciationRate, format: .number)
+                                    TextField("e.g. 40", value: $depreciationRate, format: .number.precision(.fractionLength(0...3)))
                                         .multilineTextAlignment(.trailing)
                                         .textFieldStyle(.roundedBorder)
                                         .frame(width: 100)
@@ -210,6 +223,7 @@ struct AddAssetView: View {
                         name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
                         originalPriceInput == nil ||
                         depreciationRate == nil ||
+                        !hasUsableCurrency ||
                         (selectedCurrency != "CHF" && exchangeRate <= 0)
                     )
 
@@ -243,40 +257,7 @@ struct AddAssetView: View {
         } message: {
             Text(saveErrorMessage ?? "")
         }
-        .onAppear {
-            if let asset = assetToEdit {
-                name = asset.name ?? ""
-                purchaseDate = asset.purchaseDate ?? .now
-                depreciationRate = asset.depreciationRate
-                isLinear = asset.isLinear
-
-                let storedCHF = asset.purchasePrice
-                let storedCode = (asset.currencyCode?.isEmpty == false ? asset.currencyCode : "CHF") ?? "CHF"
-                let storedOriginal = asset.originalPrice
-
-                selectedCurrency = storedCode
-                userSettings.addCurrency(storedCode)
-
-                if storedCode == "CHF" {
-                    originalPriceInput = storedOriginal > 0 ? storedOriginal : storedCHF
-                    exchangeRate = 1.0
-                } else {
-                    originalPriceInput = storedOriginal > 0 ? storedOriginal : storedCHF
-                    if storedOriginal > 0 {
-                        exchangeRate = storedCHF / storedOriginal
-                    } else {
-                        exchangeRate = 1.0
-                    }
-                }
-
-                if let match = AssetCategory.allCases.first(where: {
-                    ($0.defaultDegressiveRate == asset.depreciationRate && !asset.isLinear) ||
-                    (($0.defaultDegressiveRate / 2.0) == asset.depreciationRate && asset.isLinear)
-                }) {
-                    selectedAssetCategory = match
-                }
-            }
-        }
+        .task { loadAssetOnce() }
         .alert("Delete Asset", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
                 deleteAsset()
@@ -285,6 +266,65 @@ struct AddAssetView: View {
         } message: {
             Text("Are you sure you want to delete this asset? This action cannot be undone.")
         }
+    }
+
+    /// Whether the amount, currency and rate are all exactly as stored.
+    private func moneyIsUnchanged(from asset: AssetItem?) -> Bool {
+        guard let asset else { return false }
+        let storedCode = (asset.currencyCode?.isEmpty == false ? asset.currencyCode : "CHF") ?? "CHF"
+        let storedOriginal = asset.originalPrice > 0 ? asset.originalPrice : asset.purchasePrice
+        return selectedCurrency == storedCode
+            && originalPriceInput == storedOriginal
+            && exchangeRate == storedExchangeRate
+    }
+
+    /// Populates the form from the stored asset exactly once.
+    ///
+    /// Ran from `.onAppear` before, so it re-fired on every reappearance and
+    /// overwrote anything typed since.
+    private func loadAssetOnce() {
+        guard !hasLoadedAsset else { return }
+        hasLoadedAsset = true
+
+        guard let asset = assetToEdit else { return }
+
+        // Held for the whole load so the pickers' onChange handlers cannot rewrite
+        // the values being restored.
+        isApplyingStoredValues = true
+        defer { isApplyingStoredValues = false }
+
+        name = asset.name ?? ""
+        purchaseDate = asset.purchaseDate ?? .now
+        depreciationRate = asset.depreciationRate
+        isLinear = asset.isLinear
+
+        let storedCHF = asset.purchasePrice
+        let storedCode = (asset.currencyCode?.isEmpty == false ? asset.currencyCode : "CHF") ?? "CHF"
+        let storedOriginal = asset.originalPrice
+
+        selectedCurrency = storedCode
+        userSettings.addCurrency(storedCode)
+
+        originalPriceInput = storedOriginal > 0 ? storedOriginal : storedCHF
+        storedExchangeRate = storedOriginal > 0 ? storedCHF / storedOriginal : 1.0
+        exchangeRate = storedCode == "CHF" ? 1.0 : storedExchangeRate
+
+        // A linear asset's rate is half the class default, and .it and .vehicle
+        // share 40%, so this match is a display convenience only — it must never
+        // feed back into the stored rate.
+        if let match = AssetCategory.allCases.first(where: {
+            ($0.defaultDegressiveRate == asset.depreciationRate && !asset.isLinear) ||
+            (($0.defaultDegressiveRate / 2.0) == asset.depreciationRate && asset.isLinear)
+        }) {
+            selectedAssetCategory = match
+        } else {
+            selectedAssetCategory = .custom
+        }
+    }
+
+    /// "OTHER" is the picker's sentinel for "let me type a code", not a currency.
+    private var hasUsableCurrency: Bool {
+        !isCustomCurrency && !selectedCurrency.isEmpty && selectedCurrency != "OTHER"
     }
 
     private func saveAsset() {
@@ -299,6 +339,11 @@ struct AddAssetView: View {
         }
 
         let asset = assetToEdit ?? AssetItem(context: viewContext)
+        // An untouched foreign-currency edit must re-save the stored CHF figure.
+        // The rate in the field is the quotient of the stored amounts, and
+        // recomputing the amount from it shifted the value by fractions of a
+        // rappen on every open-and-save.
+        let priceCHF = moneyIsUnchanged(from: assetToEdit) ? (assetToEdit?.purchasePrice ?? baseCHF) : baseCHF
         // Backfill rather than only assigning on insert: rows saved by earlier
         // builds can have a nil id, and anything keyed on it then collides.
         if asset.id == nil {
@@ -306,7 +351,7 @@ struct AddAssetView: View {
         }
 
         asset.name = name
-        asset.purchasePrice = baseCHF
+        asset.purchasePrice = priceCHF
         asset.purchaseDate = purchaseDate
         asset.depreciationRate = rate
         asset.isLinear = isLinear
