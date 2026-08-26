@@ -135,15 +135,15 @@ struct InvoiceDraftTests {
     func roundsHalfAway() {
         // The naive (x * 100).rounded() / 100 gives 1.00 here, because 1.005 is
         // held as slightly less than 1.005 in binary floating point.
-        #expect(InvoiceMath.roundToCents(1.005) == 1.01)
-        #expect(InvoiceMath.roundToCents(2.675) == 2.68)
-        #expect(InvoiceMath.roundToCents(2.344) == 2.34)
-        #expect(InvoiceMath.roundToCents(-1.005) == -1.01)
-        #expect(InvoiceMath.roundToCents(0) == 0)
+        #expect(Money.roundToCents(1.005) == 1.01)
+        #expect(Money.roundToCents(2.675) == 2.68)
+        #expect(Money.roundToCents(2.344) == 2.34)
+        #expect(Money.roundToCents(-1.005) == -1.01)
+        #expect(Money.roundToCents(0) == 0)
 
-        #expect(InvoiceMath.fixedTwoDecimals(1.5) == "1.50")
-        #expect(InvoiceMath.fixedTwoDecimals(-3.456) == "-3.46")
-        #expect(InvoiceMath.fixedTwoDecimals(1.005) == "1.01")
+        #expect(Money.fixedTwoDecimals(1.5) == "1.50")
+        #expect(Money.fixedTwoDecimals(-3.456) == "-3.46")
+        #expect(Money.fixedTwoDecimals(1.005) == "1.01")
     }
 
     /// The property that matters on a document handed to a client or a tax
@@ -163,8 +163,8 @@ struct InvoiceDraftTests {
         )
 
         // Re-read the printed strings, exactly as the PDF renders them.
-        let printedRows = amounts.map { Double(InvoiceMath.fixedTwoDecimals($0))! }
-        let printedTotal = Double(InvoiceMath.fixedTwoDecimals(draft.total))!
+        let printedRows = amounts.map { Double(Money.fixedTwoDecimals($0))! }
+        let printedTotal = Double(Money.fixedTwoDecimals(draft.total))!
 
         #expect(
             abs(printedRows.reduce(0, +) - printedTotal) < 0.000_001,

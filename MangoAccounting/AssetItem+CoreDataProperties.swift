@@ -19,49 +19,63 @@ extension AssetItem {
 extension AssetItem: Identifiable {}
 
 // MARK: - Depreciation Logic
+
 extension AssetItem {
-    func depreciation(forYear targetYear: Int) -> Double {
-        guard let pDate = purchaseDate, purchasePrice > 0, depreciationRate > 0 else { return 0 }
-        let pYear = Calendar.current.component(.year, from: pDate)
 
-        if targetYear < pYear { return 0 }
+    /// Residual value a degressive schedule stops at.
+    ///
+    /// Declining-balance depreciation never mathematically reaches zero, so leaving
+    /// CHF 1 on the books is the usual convention. Linear depreciation does reach
+    /// zero and is not floored — flooring it left book value permanently
+    /// disagreeing with the accumulated depreciation reported beside it.
+    static let degressiveResidual: Double = 1.0
 
-        let yearsActive = targetYear - pYear
+    /// Number of annual charges taken by the end of `targetYear`.
+    ///
+    /// The purchase year takes a full charge, matching how the app has always
+    /// calculated it.
+    private func chargeCount(throughYear targetYear: Int) -> Int {
+        guard let purchaseDate else { return 0 }
+        return max(0, targetYear - FiscalCalendar.year(of: purchaseDate) + 1)
+    }
+
+    /// Closed-form book value after a number of annual charges, unrounded.
+    ///
+    /// Computed directly rather than as cost minus a running sum: summing rounded
+    /// yearly charges over decades left the degressive residual a rappen off its
+    /// floor.
+    private func rawBookValue(afterCharges charges: Int) -> Double {
+        guard purchasePrice > 0 else { return 0 }
+        guard charges > 0 else { return purchasePrice }
+
         let rate = depreciationRate / 100.0
+        guard rate > 0 else { return purchasePrice }
 
         if isLinear {
-            let accumulatedBefore = Double(yearsActive) * (purchasePrice * rate)
-            if accumulatedBefore >= purchasePrice { return 0 }
-
-            let currentDepreciation = purchasePrice * rate
-            if accumulatedBefore + currentDepreciation > purchasePrice {
-                return purchasePrice - accumulatedBefore
-            }
-            return currentDepreciation
-        } else {
-            let bookValueBefore = purchasePrice * pow(1.0 - rate, Double(yearsActive))
-            if bookValueBefore <= 1.0 { return 0 }
-
-            let currentDepreciation = bookValueBefore * rate
-            if bookValueBefore - currentDepreciation < 1.0 {
-                return bookValueBefore - 1.0
-            }
-            return currentDepreciation
+            return max(0, purchasePrice - Double(charges) * purchasePrice * rate)
         }
+        return max(Self.degressiveResidual, purchasePrice * pow(1.0 - rate, Double(charges)))
+    }
+
+    /// This year's depreciation charge.
+    func depreciation(forYear targetYear: Int) -> Double {
+        guard purchasePrice > 0, let purchaseDate, depreciationRate > 0 else { return 0 }
+        guard targetYear >= FiscalCalendar.year(of: purchaseDate) else { return 0 }
+
+        // Defined as the drop in book value, so the two always reconcile.
+        let opening = rawBookValue(afterCharges: chargeCount(throughYear: targetYear - 1))
+        let closing = rawBookValue(afterCharges: chargeCount(throughYear: targetYear))
+        return Money.roundToCents(opening - closing)
     }
 
     func bookValue(atEndOfYear targetYear: Int) -> Double {
-        guard purchasePrice > 0, let pDate = purchaseDate else { return 0 }
+        guard purchasePrice > 0, let purchaseDate else { return 0 }
 
-        let purchaseYear = Calendar.current.component(.year, from: pDate)
-        if targetYear < purchaseYear {
-            return purchasePrice
-        }
+        // An asset that did not exist yet carries no book value. This returned the
+        // full purchase price, inflating total assets on every balance sheet for a
+        // year before the item was bought.
+        guard targetYear >= FiscalCalendar.year(of: purchaseDate) else { return 0 }
 
-        let cumulativeDepreciation = (purchaseYear...targetYear).reduce(0.0) { partial, year in
-            partial + depreciation(forYear: year)
-        }
-
-        return max(1.0, purchasePrice - cumulativeDepreciation)
+        return Money.roundToCents(rawBookValue(afterCharges: chargeCount(throughYear: targetYear)))
     }
 }

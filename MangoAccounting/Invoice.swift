@@ -99,9 +99,7 @@ struct InvoiceDraft: Hashable, Codable {
     var total: Double {
         // Each line is summed *after* rounding, which is what makes the printed
         // column add up to the printed total rather than differing by a rappen.
-        InvoiceMath.roundToCents(
-            lineItems.reduce(0) { $0 + InvoiceMath.roundToCents($1.amount) }
-        )
+        Money.sumOfRounded(lineItems.map(\.amount))
     }
 
     /// Standard payment window used for a new invoice.
@@ -109,30 +107,5 @@ struct InvoiceDraft: Hashable, Codable {
 
     static func defaultDueDate(from date: Date) -> Date {
         Calendar.current.date(byAdding: .day, value: defaultPaymentTermDays, to: date) ?? date
-    }
-}
-
-enum InvoiceMath {
-    /// Rounds an amount to whole rappen, half away from zero.
-    ///
-    /// `(value * 100).rounded() / 100` is not enough: 1.005 is held as slightly
-    /// *less* than 1.005 in binary floating point, so that expression yields 1.00
-    /// where an accountant expects 1.01. Going through `Decimal` — seeded from the
-    /// value's decimal text so the binary approximation is discarded — rounds the
-    /// number the user actually typed.
-    static func roundToCents(_ value: Double) -> Double {
-        guard value.isFinite else { return 0 }
-        let text = String(format: "%.10f", value)
-        var source = Decimal(string: text) ?? Decimal(value)
-        var rounded = Decimal()
-        NSDecimalRound(&rounded, &source, 2, .plain)
-        return NSDecimalNumber(decimal: rounded).doubleValue
-    }
-
-    /// Formats an amount the way the PDF prints it: two decimals, always a dot,
-    /// independent of the reader's locale, because the Swiss QR payload beside it
-    /// is specified that way.
-    static func fixedTwoDecimals(_ value: Double) -> String {
-        String(format: "%.2f", roundToCents(value))
     }
 }

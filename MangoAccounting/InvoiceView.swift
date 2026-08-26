@@ -118,7 +118,7 @@ struct InvoiceView: View {
                 HStack(alignment: .top) {
                     Text(item.description)
                     Spacer()
-                    Text(InvoiceMath.fixedTwoDecimals(item.amount))
+                    Text(Money.fixedTwoDecimals(item.amount))
                 }
                 Divider()
             }
@@ -131,7 +131,7 @@ struct InvoiceView: View {
                 Spacer()
                 Text("Total")
                 Spacer().frame(width: 60)
-                Text("CHF \(InvoiceMath.fixedTwoDecimals(draft.total))")
+                Text("CHF \(Money.fixedTwoDecimals(draft.total))")
                     .bold()
             }
             .font(.title2)
@@ -172,7 +172,7 @@ struct InvoiceView: View {
                     Spacer().frame(height: 10)
                     Text(String.localizedStringWithFormat(
                         NSLocalizedString("Amount: %@", comment: ""),
-                        "CHF \(InvoiceMath.fixedTwoDecimals(draft.total))"
+                        "CHF \(Money.fixedTwoDecimals(draft.total))"
                     ))
                     Text(String.localizedStringWithFormat(
                         NSLocalizedString("Reference: %@", comment: ""),

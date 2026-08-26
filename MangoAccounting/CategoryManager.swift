@@ -32,7 +32,7 @@ class CategoryManager: ObservableObject {
 
     // MODIFICATION: New function to add default categories
     private func addDefaultCategoriesIfNeeded() {
-        let defaultExpenseCategories = ["Car Expenses"]
+        let defaultExpenseCategories = [ReportGenerator.carExpensesCategory]
         for category in defaultExpenseCategories {
             if !expenseCategories.contains(category) {
                 expenseCategories.append(category)

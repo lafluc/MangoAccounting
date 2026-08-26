@@ -24,17 +24,21 @@ struct DashboardView: View {
     
     private var filteredTransactions: [TransactionItem] {
         let now = Date()
-        let calendar = Calendar.current
-        
+        let calendar = FiscalCalendar.calendar
+
         switch selectedTimeframe {
         case .last30Days:
-            let startDate = calendar.date(byAdding: .day, value: -30, to: now)!
+            guard let startDate = calendar.date(byAdding: .day, value: -30, to: now) else {
+                return Array(transactions)
+            }
             return transactions.filter { ($0.date ?? .distantPast) >= startDate }
         case .last90Days:
-            let startDate = calendar.date(byAdding: .day, value: -90, to: now)!
+            guard let startDate = calendar.date(byAdding: .day, value: -90, to: now) else {
+                return Array(transactions)
+            }
             return transactions.filter { ($0.date ?? .distantPast) >= startDate }
         case .yearToDate:
-            let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now))!
+            let yearStart = FiscalCalendar.yearBounds(FiscalCalendar.year(of: now)).start
             return transactions.filter { ($0.date ?? .distantPast) >= yearStart }
         case .allTime:
             return Array(transactions)
@@ -214,7 +218,7 @@ struct CumulativeProfitChartView: View {
     struct DailyNet: Identifiable { let id = UUID(); let date: Date; var cumulativeProfit: Double }
     private var chartData: [DailyNet] {
         guard !transactions.isEmpty else { return [] }
-        let calendar = Calendar.current
+        let calendar = FiscalCalendar.calendar
         let groupedByDay = Dictionary(grouping: transactions) { calendar.startOfDay(for: $0.date ?? .now) }
         let dailyChanges = groupedByDay.map { (date, txs) -> (Date, Double) in
             let net = txs.reduce(0) { $0 + ($1.type == "Income" ? $1.amount : -$1.amount) }
