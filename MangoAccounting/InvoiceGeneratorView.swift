@@ -5,20 +5,18 @@ import PDFKit
 
 // =================================================================
 // MARK: - LineItemRowView Subview
-// This view handles the layout for a single line item.
 // =================================================================
 struct LineItemRowView: View {
-    @Binding var item: InvoiceGeneratorView.LineItem
+    @Binding var item: InvoiceLineItem
     var deleteAction: () -> Void
 
     var body: some View {
         HStack {
             TextField("Description", text: $item.description)
-            
-            TextField("Amount", value: $item.amount, format: .currency(code: "CHF"))
-                // THE FIX IS HERE: This modifier is now only applied for iOS builds.
+
+            TextField("Amount", value: $item.amount, format: .number.precision(.fractionLength(0...2)))
                 #if os(iOS)
-                .keyboardType(.decimalPad)
+                .keyboardType(.numbersAndPunctuation)
                 #endif
                 .frame(width: 120)
                 .multilineTextAlignment(.trailing)
@@ -28,6 +26,7 @@ struct LineItemRowView: View {
             }
             .buttonStyle(.plain)
             .foregroundColor(AppTheme.negative)
+            .help("Remove this line")
         }
     }
 }
@@ -35,30 +34,36 @@ struct LineItemRowView: View {
 
 struct InvoiceGeneratorView: View {
     @Environment(\.locale) var locale
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var userSettings = UserSettings()
     @EnvironmentObject var tabManager: TabSelectionManager
-    
-    @State private var clientName: String = ""
-    @State private var clientAddress: String = ""
-    
-    @State private var invoiceNumber: String = ""
-    @State private var invoiceDate: Date = .now
-    @State private var dueDate: Date = Calendar.current.date(byAdding: .day, value: 30, to: .now)!
-    @State private var customMessage: String = "Vielen Dank für die gute Zusammenarbeit."
-    @State private var isVATExempt: Bool = false
-    
-    struct LineItem: Identifiable, Hashable { let id = UUID(); var description: String; var amount: Double }
-    @State private var lineItems: [LineItem] = [LineItem(description: "", amount: 0)]
+
+    /// The archived invoice being edited, or `nil` when composing a new one.
+    var editingDocument: SavedDocument?
+    /// Starting values — an existing invoice's source, or a prefill for a duplicate.
+    var initialDraft: InvoiceDraft?
+
+    @State private var draft = InvoiceDraft()
+    @State private var hasLoaded = false
     @State private var pdfPreviewItem: PDFPreview?
     @State private var showSaveToast = false
-
     @State private var showOverwriteAlert = false
     @State private var dataToSave: Data?
     @State private var saveErrorMessage: String?
-    private var totalAmount: Double { lineItems.reduce(0) { $0 + max(0, $1.amount) } }
-    private var a4Size = CGSize(width: 595.2, height: 841.8)
+
+    private var isEditing: Bool { editingDocument != nil }
+
+    /// Swiss QR-bill payloads cap the amount at this value.
+    private static let maximumInvoiceAmount: Double = 999_999_999.99
+
     private var isFormValid: Bool {
-        !userSettings.name.isEmpty && !userSettings.iban.isEmpty && !userSettings.address.isEmpty && !clientName.isEmpty && !lineItems.isEmpty && totalAmount > 0
+        !draft.issuer.name.isEmpty
+            && !draft.issuer.iban.isEmpty
+            && !draft.issuer.address.isEmpty
+            && !draft.clientName.isEmpty
+            && !draft.number.isEmpty
+            && draft.total > 0
+            && draft.total <= Self.maximumInvoiceAmount
     }
 
     var body: some View {
@@ -77,29 +82,38 @@ struct InvoiceGeneratorView: View {
                 .padding()
             }
             .background(AppTheme.background.ignoresSafeArea())
-            .navigationTitle(Text("New Invoice"))
-            .sheet(item: $pdfPreviewItem) { item in
-                pdfPreviewSheet(for: item)
-            }
-            .onAppear {
-                if invoiceNumber.isEmpty {
-                    invoiceNumber = generateSequentialInvoiceNumber()
-                }
-            }
-            .onChange(of: tabManager.selectedTab) {
-                if tabManager.selectedTab == .newInvoice {
-                    let isPristine = clientName.isEmpty &&
-                                     clientAddress.isEmpty &&
-                                     lineItems.count == 1 &&
-                                     lineItems.first?.description == "" &&
-                                     lineItems.first?.amount == 0
-                    
-                    if isPristine {
-                        invoiceNumber = generateSequentialInvoiceNumber()
+            .navigationTitle(Text(isEditing ? "Edit Invoice" : "New Invoice"))
+            .toolbar {
+                if isEditing {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close") { dismiss() }
+                            .keyboardShortcut(.cancelAction)
                     }
                 }
             }
-            
+            .sheet(item: $pdfPreviewItem) { item in
+                pdfPreviewSheet(for: item)
+            }
+            .task { loadOnce() }
+            .onChange(of: tabManager.selectedTab) {
+                // Only the composer tab refreshes its suggested number, and only
+                // while the form is untouched. An edit session must never have its
+                // number rewritten underneath it.
+                guard !isEditing, tabManager.selectedTab == .newInvoice, isPristine else { return }
+                draft.number = generateSequentialInvoiceNumber()
+            }
+            .alert(
+                "Invoice",
+                isPresented: Binding(
+                    get: { saveErrorMessage != nil },
+                    set: { if !$0 { saveErrorMessage = nil } }
+                )
+            ) {
+                Button("OK", role: .cancel) { saveErrorMessage = nil }
+            } message: {
+                Text(saveErrorMessage ?? "")
+            }
+
             if showSaveToast {
                 ToastView(title: "Invoice Saved")
                     .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -107,63 +121,100 @@ struct InvoiceGeneratorView: View {
         }
     }
 
+    private var isPristine: Bool {
+        draft.clientName.isEmpty
+            && draft.clientAddress.isEmpty
+            && draft.lineItems.count == 1
+            && draft.lineItems.first?.description.isEmpty == true
+            && draft.lineItems.first?.amount == 0
+    }
+
+    // MARK: - Loading
+
+    private func loadOnce() {
+        guard !hasLoaded else { return }
+        hasLoaded = true
+
+        if let initialDraft {
+            draft = initialDraft
+            // A duplicate arrives without a number so it gets a fresh one.
+            if draft.number.isEmpty {
+                draft.number = generateSequentialInvoiceNumber()
+            }
+            if draft.issuer.name.isEmpty && draft.issuer.iban.isEmpty {
+                draft.issuer = InvoiceIssuer(settings: userSettings)
+            }
+            return
+        }
+
+        // A new invoice starts from the saved business details, then keeps its own
+        // copy: editing the form no longer rewrites app-wide settings as you type.
+        draft.issuer = InvoiceIssuer(settings: userSettings)
+        draft.customMessage = Self.defaultClosingMessage
+        draft.number = generateSequentialInvoiceNumber()
+    }
+
+    private static let defaultClosingMessage = "Vielen Dank für die gute Zusammenarbeit."
+
     // MARK: - Form Sections
-    
+
     private var yourInformationSection: some View {
         SectionView(title: "Your Information") {
             CardView {
                 VStack {
-                    TextField("Name", text: $userSettings.name)
+                    TextField("Name", text: $draft.issuer.name)
                     Divider()
-                    TextField("Address", text: $userSettings.address, axis: .vertical).lineLimit(1...3)
+                    TextField("Address", text: $draft.issuer.address, axis: .vertical).lineLimit(1...3)
                     Divider()
-                    // ADDITION: New TextField for the UID
-                    TextField("UID (CHE-...)", text: $userSettings.uid)
+                    TextField("UID (CHE-...)", text: $draft.issuer.uid)
+                        .autocorrectionDisabled()
                     Divider()
-                    TextField("IBAN (CH...)", text: $userSettings.iban)
+                    TextField("IBAN (CH...)", text: $draft.issuer.iban)
+                        .autocorrectionDisabled()
                 }
             }
         }
     }
-    
+
     private var clientInformationSection: some View {
         SectionView(title: "Client Information") {
             CardView {
                 VStack {
-                    TextField("Client Name", text: $clientName)
+                    TextField("Client Name", text: $draft.clientName)
                     Divider()
-                    TextField("Client Address", text: $clientAddress, axis: .vertical).lineLimit(1...3)
+                    TextField("Client Address", text: $draft.clientAddress, axis: .vertical).lineLimit(1...3)
                 }
             }
         }
     }
-    
+
     private var invoiceDetailsSection: some View {
         SectionView(title: "Invoice Details") {
             CardView {
                 VStack {
-                    TextField("Invoice Number", text: $invoiceNumber)
+                    TextField("Invoice Number", text: $draft.number)
+                        .autocorrectionDisabled()
                     Divider()
-                    DatePicker("Invoice Date", selection: $invoiceDate, displayedComponents: .date)
+                    DatePicker("Invoice Date", selection: $draft.invoiceDate, displayedComponents: .date)
                     Divider()
-                    DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
+                    DatePicker("Due Date", selection: $draft.dueDate, displayedComponents: .date)
                 }
             }
         }
     }
-    
+
     private var vatExemptionSection: some View {
         SectionView(title: "VAT Exemption") {
-            Toggle("Not subject to VAT according to Art. 10 Abs. 2 MWSTG", isOn: $isVATExempt)
+            Toggle("Not subject to VAT according to Art. 10 Abs. 2 MWSTG", isOn: $draft.isVATExempt)
                 .padding()
                 .background(AppTheme.cardBackground)
                 .cornerRadius(AppTheme.cornerRadius)
         }
     }
-    
+
     private var messageToClientSection: some View {
         SectionView(title: "Message to Client") {
-            TextEditor(text: $customMessage)
+            TextEditor(text: $draft.customMessage)
                 .frame(minHeight: 120)
                 .padding(8)
                 .background(AppTheme.cardBackground)
@@ -171,25 +222,22 @@ struct InvoiceGeneratorView: View {
                 .scrollContentBackground(.hidden)
         }
     }
-    
+
     private var lineItemsSection: some View {
         SectionView(title: "Line Items") {
             CardView {
                 VStack {
-                    ForEach(lineItems) { item in
-                        if let index = lineItems.firstIndex(where: { $0.id == item.id }) {
-                            LineItemRowView(item: $lineItems[index]) {
-                                lineItems.removeAll { $0.id == item.id }
-                            }
-                            
-                            if item.id != lineItems.last?.id {
-                                Divider()
-                            }
+                    ForEach($draft.lineItems) { $item in
+                        LineItemRowView(item: $item) {
+                            draft.lineItems.removeAll { $0.id == item.id }
+                        }
+                        if item.id != draft.lineItems.last?.id {
+                            Divider()
                         }
                     }
-                    
+
                     Button("Add Item") {
-                        lineItems.append(LineItem(description: "", amount: 0))
+                        draft.lineItems.append(InvoiceLineItem())
                     }
                     .tint(AppTheme.accent)
                     .padding(.top, 8)
@@ -197,19 +245,19 @@ struct InvoiceGeneratorView: View {
             }
         }
     }
-    
+
     private var totalSection: some View {
         SectionView(title: "Total") {
             CardView {
                 HStack {
                     Text("Total Amount").bold()
                     Spacer()
-                    Text(totalAmount, format: .currency(code: "CHF")).bold()
+                    Text(draft.total, format: .currency(code: "CHF")).bold()
                 }
             }
         }
     }
-    
+
     private var generatePDFButton: some View {
         Button {
             generateAndShowPDF()
@@ -221,30 +269,37 @@ struct InvoiceGeneratorView: View {
         .disabled(!isFormValid)
         .padding(.top)
     }
-    
+
     @ViewBuilder
     private func pdfPreviewSheet(for item: PDFPreview) -> some View {
         VStack(spacing: 0) {
             HStack {
-                Text(String.localizedStringWithFormat(NSLocalizedString("Preview: %@", comment: ""), invoiceNumber))
-                    .font(.headline)
+                Text(String.localizedStringWithFormat(
+                    NSLocalizedString("Preview: %@", comment: ""), draft.number
+                ))
+                .font(.headline)
                 Spacer()
                 Button {
                     initiateSave(data: item.data)
                 } label: {
-                    Label("Save", systemImage: "archivebox.fill")
+                    Label(isEditing ? "Save Changes" : "Save", systemImage: "archivebox.fill")
                 }
                 .tint(AppTheme.accent)
+                .keyboardShortcut("s", modifiers: .command)
+
                 Button("Close", role: .cancel) { pdfPreviewItem = nil }
             }
             .padding()
             Divider()
             ScrollView([.horizontal, .vertical]) {
                 PDFKitView(data: item.data)
-                     .frame(width: a4Size.width, height: a4Size.height)
+                    .frame(
+                        width: InvoicePagination.pageSize.width,
+                        height: InvoicePagination.pageSize.height * CGFloat(max(1, pageCount(of: item.data)))
+                    )
             }
         }
-        .frame(minWidth: 400, minHeight: 400)
+        .frame(minWidth: 480, idealWidth: 640, minHeight: 480, idealHeight: 720)
         .alert("Invoice Number Exists", isPresented: $showOverwriteAlert) {
             Button("Overwrite", role: .destructive) {
                 let data = dataToSave
@@ -255,106 +310,131 @@ struct InvoiceGeneratorView: View {
                 dataToSave = nil
             }
         } message: {
-            Text("An invoice with the number \"\(invoiceNumber)\" already exists.\nDo you want to overwrite it?")
-        }
-        .alert(
-            "Invoice",
-            isPresented: Binding(
-                get: { saveErrorMessage != nil },
-                set: { if !$0 { saveErrorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { saveErrorMessage = nil }
-        } message: {
-            Text(saveErrorMessage ?? "")
+            Text("An invoice with the number \"\(draft.number)\" already exists.\nDo you want to overwrite it?")
         }
     }
 
+    private func pageCount(of data: Data) -> Int {
+        PDFDocument(data: data)?.pageCount ?? 1
+    }
+
+    // MARK: - Saving
+
     private func initiateSave(data: Data) {
-        let existingIDs: [String]
+        let existing: [SavedDocument]
         do {
-            existingIDs = try DocumentStore.shared.documents()
-                .filter { $0.type == .invoice }
-                .map { $0.id }
+            existing = try DocumentStore.shared.documents().filter { $0.type == .invoice }
         } catch {
             saveErrorMessage = error.localizedDescription
             return
         }
 
-        if existingIDs.contains(invoiceNumber) {
-            self.dataToSave = data
-            self.showOverwriteAlert = true
+        let targetID = SavedDocument(
+            number: draft.number,
+            fileName: DocumentStore.invoiceFileName(for: draft.number),
+            date: draft.invoiceDate,
+            type: .invoice
+        ).id
+
+        // Re-saving the invoice you are editing is not a collision.
+        let collides = existing.contains { $0.id == targetID } && editingDocument?.id != targetID
+        if collides {
+            dataToSave = data
+            showOverwriteAlert = true
         } else {
             saveInvoice(data: data)
         }
     }
 
     private func saveInvoice(data: Data) {
-        let doc = SavedDocument(
-            id: invoiceNumber,
-            fileName: "Invoice-\(DocumentStore.sanitizedFileComponent(invoiceNumber, fallback: "unnumbered")).pdf",
-            date: invoiceDate,
-            type: .invoice,
-            clientName: clientName
-        )
-        
         do {
-            try DocumentStore.shared.save(document: doc, data: data)
+            try DocumentStore.shared.save(invoice: draft, pdf: data, replacing: editingDocument)
         } catch {
-            // Previously this path showed "Invoice Saved" and cleared the form
-            // even when nothing had been written, destroying the user's input.
+            // The previous version showed "Invoice Saved" and cleared the form even
+            // when nothing had been written, destroying the user's input.
             saveErrorMessage = error.localizedDescription
             return
         }
+
+        // A new invoice updates the stored business details for next time. An edit
+        // must not write a historical snapshot back over current settings.
+        if !isEditing {
+            userSettings.name = draft.issuer.name
+            userSettings.address = draft.issuer.address
+            userSettings.uid = draft.issuer.uid
+            userSettings.iban = draft.issuer.iban
+        }
+
         pdfPreviewItem = nil
 
-        withAnimation {
-            showSaveToast = true
+        if isEditing {
+            dismiss()
+            return
         }
+
+        withAnimation { showSaveToast = true }
         Task {
-            try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
-            withAnimation {
-                showSaveToast = false
-            }
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            withAnimation { showSaveToast = false }
         }
-        
         resetForm()
     }
-    
+
     private func resetForm() {
-        clientName = ""
-        clientAddress = ""
-        invoiceDate = .now
-        dueDate = Calendar.current.date(byAdding: .day, value: 30, to: .now)!
-        customMessage = "Vielen Dank für die gute Zusammenarbeit."
-        isVATExempt = false
-        lineItems = [LineItem(description: "", amount: 0)]
-        
-        invoiceNumber = generateSequentialInvoiceNumber()
+        let issuer = draft.issuer
+        draft = InvoiceDraft()
+        draft.issuer = issuer
+        draft.customMessage = Self.defaultClosingMessage
+        draft.number = generateSequentialInvoiceNumber()
     }
+
+    // MARK: - Rendering
 
     @MainActor
     private func generateAndShowPDF() {
-         let invoiceContent = InvoiceView(
-            userSettings: userSettings, clientName: clientName, clientAddress: clientAddress,
-            invoiceNumber: invoiceNumber, invoiceDate: invoiceDate, dueDate: dueDate,
-            lineItems: lineItems, totalAmount: totalAmount, customMessage: customMessage,
-            isVATExempt: isVATExempt,
-            locale: self.locale
-        )
-        let renderer = ImageRenderer(content: invoiceContent.environment(\.locale, self.locale))
-        let mutableData = NSMutableData()
-        guard let consumer = CGDataConsumer(data: mutableData) else { return }
-        var mediaBox = CGRect(origin: .zero, size: a4Size)
-        guard let pdfContext = CGContext(consumer: consumer, mediaBox: &mediaBox, nil) else { return }
-        pdfContext.beginPDFPage(nil)
-        renderer.render { size, renderer in renderer(pdfContext) }
-        pdfContext.endPDFPage()
-        pdfContext.closePDF()
-        pdfPreviewItem = PDFPreview(data: mutableData as Data)
+        guard let data = renderPDF() else {
+            saveErrorMessage = String(
+                localized: "The PDF could not be created. Please try again."
+            )
+            return
+        }
+        pdfPreviewItem = PDFPreview(data: data)
     }
-    
+
+    @MainActor
+    private func renderPDF() -> Data? {
+        // Fully blank rows are working scaffolding, not billable lines.
+        let printableItems = draft.lineItems.filter {
+            !($0.description.trimmingCharacters(in: .whitespaces).isEmpty && $0.amount == 0)
+        }
+        let pages = InvoicePagination.paginate(
+            printableItems,
+            messageLineCount: InvoicePagination.messageLineCount(for: draft.customMessage)
+        )
+
+        let mutableData = NSMutableData()
+        guard let consumer = CGDataConsumer(data: mutableData) else { return nil }
+        var mediaBox = CGRect(origin: .zero, size: InvoicePagination.pageSize)
+        guard let pdfContext = CGContext(consumer: consumer, mediaBox: &mediaBox, nil) else { return nil }
+
+        for page in pages {
+            let content = InvoiceView(draft: draft, page: page, locale: locale)
+            let renderer = ImageRenderer(content: content.environment(\.locale, locale))
+            pdfContext.beginPDFPage(nil)
+            renderer.render { _, renderInContext in renderInContext(pdfContext) }
+            pdfContext.endPDFPage()
+        }
+        pdfContext.closePDF()
+
+        return mutableData as Data
+    }
+
+    // MARK: - Numbering
+
     private func generateSequentialInvoiceNumber() -> String {
+        // POSIX locale and an explicit Gregorian calendar: under a non-Gregorian
+        // calendar or non-Latin digits the prefix drifted and the Int parse below
+        // failed, which produced duplicate invoice numbers.
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
@@ -362,18 +442,16 @@ struct InvoiceGeneratorView: View {
         let datePrefix = formatter.string(from: Date())
         let fullPrefix = "RE-\(datePrefix)"
 
+        // A suggested number is cosmetic, so the display-safe reader is fine here;
+        // initiateSave() re-checks against the throwing reader before writing.
         let allInvoices = DocumentStore.shared.listDocuments().filter { $0.type == .invoice }
-        // listDocuments() is the display-safe reader here on purpose: a suggested
-        // number is cosmetic, and initiateSave() re-checks against the throwing
-        // reader before anything is written.
 
         let existingSequenceNumbers: Set<Int> = Set(allInvoices.compactMap { doc -> Int? in
-            if doc.id == fullPrefix {
+            if doc.number == fullPrefix {
                 return 0
-            } else if doc.id.starts(with: "\(fullPrefix)-") {
-                guard let lastPart = doc.id.split(separator: "-").last, let number = Int(lastPart) else {
-                    return nil
-                }
+            } else if doc.number.starts(with: "\(fullPrefix)-") {
+                guard let lastPart = doc.number.split(separator: "-").last,
+                      let number = Int(lastPart) else { return nil }
                 return number
             } else {
                 return nil
@@ -385,10 +463,12 @@ struct InvoiceGeneratorView: View {
             nextSequenceNumber += 1
         }
 
-        if nextSequenceNumber == 0 {
-            return fullPrefix
-        } else {
-            return "\(fullPrefix)-\(nextSequenceNumber)"
-        }
+        return nextSequenceNumber == 0 ? fullPrefix : "\(fullPrefix)-\(nextSequenceNumber)"
+    }
+}
+
+private extension String {
+    init(localized key: String.LocalizationValue) {
+        self.init(localized: key, bundle: .main)
     }
 }

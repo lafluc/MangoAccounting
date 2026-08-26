@@ -13,6 +13,9 @@ class DocumentListViewModel: ObservableObject {
     /// Non-nil when the archive could not be read or written. Presented as an
     /// alert; previously these failures were silent.
     @Published var errorMessage: String?
+    /// Ids of invoices that have an editable source saved beside their PDF.
+    /// Anything archived before that existed is absent here and stays read-only.
+    @Published var editableIDs: Set<String> = []
     var allDocuments: [SavedDocument] = []
 
     func reloadDocuments() {
@@ -25,6 +28,7 @@ class DocumentListViewModel: ObservableObject {
         }
         self.allDocuments = all
         self.documents = all
+        self.editableIDs = DocumentStore.shared.idsWithDrafts()
 
         if selectedDocumentID == nil || !documents.contains(where: { $0.id == selectedDocumentID }) {
             selectedDocumentID = documents.first?.id
@@ -46,6 +50,10 @@ class DocumentListViewModel: ObservableObject {
         }
     }
     
+    func isEditable(_ document: SavedDocument) -> Bool {
+        document.type == .invoice && editableIDs.contains(document.id)
+    }
+
     func updatePreview() {
         guard let id = selectedDocumentID,
            let document = allDocuments.first(where: { $0.id == id }) else {
@@ -85,6 +93,7 @@ struct DocumentListView: View {
     
     @State private var isExporting = false
     @State private var documentToExport: PDFFile?
+    @State private var invoiceEditorTarget: InvoiceEditorTarget?
     private var selectedDocument: SavedDocument? {
         guard let id = viewModel.selectedDocumentID else { return nil }
         return viewModel.allDocuments.first(where: { $0.id == id })
@@ -102,6 +111,15 @@ struct DocumentListView: View {
             Button("Delete", role: .destructive) { viewModel.delete(document: doc) }
         } message: { doc in
             Text(String.localizedStringWithFormat(NSLocalizedString("This file (%@) will be permanently deleted.", comment: ""), doc.fileName))
+        }
+        .sheet(item: $invoiceEditorTarget, onDismiss: { viewModel.reloadDocuments() }) { target in
+            NavigationStack {
+                InvoiceGeneratorView(
+                    editingDocument: target.document,
+                    initialDraft: target.draft
+                )
+            }
+            .frame(minWidth: 560, idealWidth: 680, minHeight: 560, idealHeight: 760)
         }
         .fileExporter(isPresented: $isExporting, document: documentToExport, contentType: .pdf) { result in
             if case .failure(let error) = result {
@@ -134,6 +152,21 @@ struct DocumentListView: View {
                         }
                         .listRowBackground(Color.clear)
                         .contextMenu {
+                            if viewModel.isEditable(doc) {
+                                Button {
+                                    openEditor(for: doc)
+                                } label: {
+                                    Label("Edit Invoice", systemImage: "pencil")
+                                }
+                            }
+                            if doc.type == .invoice {
+                                Button {
+                                    openDuplicate(of: doc)
+                                } label: {
+                                    Label("Duplicate as New Invoice", systemImage: "plus.square.on.square")
+                                }
+                            }
+                            Divider()
                             Button(role: .destructive) {
                                 self.documentToDelete = doc
                                 self.showDeleteConfirmation = true
@@ -165,6 +198,15 @@ struct DocumentListView: View {
                 HStack {
                     Text(selectedDoc.fileName).font(.headline).lineLimit(1)
                     Spacer()
+                    if viewModel.isEditable(selectedDoc) {
+                        Button {
+                            openEditor(for: selectedDoc)
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        .tint(AppTheme.accent)
+                        .help("Reopen this invoice and change it")
+                    }
                     Button {
                         self.documentToExport = PDFFile(data: data, preferredFileName: selectedDoc.fileName)
                         self.isExporting = true
@@ -208,12 +250,21 @@ struct DocumentListView: View {
                 .foregroundColor(AppTheme.accent)
                 .frame(width: 40)
             VStack(alignment: .leading, spacing: 4) {
-                Text(doc.type == .invoice ? "Invoice \(doc.id)" : "Annual Report \(doc.id)")
+                Text(doc.type == .invoice ? "Invoice \(doc.number)" : "Annual Report \(doc.number)")
                     .font(.headline)
                     .foregroundColor(AppTheme.textPrimary)
-                Text(doc.clientName ?? "Financial Statement")
-                    .font(.subheadline)
-                    .foregroundColor(AppTheme.textSecondary)
+                HStack(spacing: 6) {
+                    Text(doc.clientName ?? "Financial Statement")
+                        .font(.subheadline)
+                        .foregroundColor(AppTheme.textSecondary)
+                    if doc.type == .invoice {
+                        if viewModel.isEditable(doc) {
+                            TagLabel(text: "Editable", tint: AppTheme.accent)
+                        } else {
+                            TagLabel(text: "PDF only", tint: AppTheme.textSecondary)
+                        }
+                    }
+                }
             }
             Spacer()
             Text(doc.date, style: .date)
@@ -233,6 +284,32 @@ struct DocumentListView: View {
         )
     }
     
+    private func openEditor(for document: SavedDocument) {
+        guard let draft = DocumentStore.shared.draft(for: document) else {
+            viewModel.errorMessage = String(
+                localized: "This invoice was saved before editing was supported, so its details are not stored. Use \"Duplicate as New Invoice\" to re-enter them once."
+            )
+            return
+        }
+        invoiceEditorTarget = InvoiceEditorTarget(document: document, draft: draft)
+    }
+
+    /// Opens a new invoice prefilled from an existing one.
+    ///
+    /// For an invoice with no stored source this is the migration path: whatever
+    /// the archive still knows — the client and the date — is carried over, and the
+    /// result is editable from then on. The original is left untouched.
+    private func openDuplicate(of document: SavedDocument) {
+        var draft = DocumentStore.shared.draft(for: document) ?? InvoiceDraft(
+            invoiceDate: document.date,
+            dueDate: InvoiceDraft.defaultDueDate(from: document.date),
+            clientName: document.clientName ?? ""
+        )
+        // An empty number makes the editor assign the next free one.
+        draft.number = ""
+        invoiceEditorTarget = InvoiceEditorTarget(document: nil, draft: draft)
+    }
+
     // CORRECTION: This function was missing and has been re-added.
     private func confirmDelete(at offsets: IndexSet) {
         if let index = offsets.first {
@@ -266,5 +343,36 @@ struct PDFFile: FileDocument, Transferable {
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(exportedContentType: .pdf) { file in file.data }
         .suggestedFileName { file in file.preferredFileName }
+    }
+}
+
+/// Identifies which invoice the editor sheet should open.
+struct InvoiceEditorTarget: Identifiable {
+    /// `nil` when composing a new invoice (a duplicate) rather than editing one.
+    let document: SavedDocument?
+    let draft: InvoiceDraft
+
+    var id: String { document?.id ?? "new:\(draft.number)" }
+}
+
+/// Small inline chip, matching the pill already used for foreign-currency amounts.
+struct TagLabel: View {
+    let text: LocalizedStringKey
+    let tint: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption2)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 1)
+            .background(tint.opacity(0.18))
+            .foregroundColor(tint)
+            .clipShape(Capsule())
+    }
+}
+
+private extension String {
+    init(localized key: String.LocalizationValue) {
+        self.init(localized: key, bundle: .main)
     }
 }

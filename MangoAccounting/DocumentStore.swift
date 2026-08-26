@@ -8,11 +8,37 @@ struct SavedDocument: Identifiable, Codable, Hashable {
         case invoice, report
     }
 
-    var id: String // Invoice number or Report year
+    /// The document's business key: an invoice number, or a report year.
+    var number: String
     var fileName: String
     var date: Date
     var type: DocumentType
     var clientName: String? // Optional, only for invoices
+
+    /// Identity that is unique across both kinds.
+    ///
+    /// `number` alone is not: an invoice numbered "2025" and the 2025 annual
+    /// report shared it, which gave `ForEach` duplicate ids and made the sidebar
+    /// preview or delete the wrong row.
+    var id: String { "\(type.rawValue):\(number)" }
+
+    /// The stored keys are unchanged — `number` is still written as "id" — so
+    /// every metadata.json written by an earlier build decodes as-is.
+    private enum CodingKeys: String, CodingKey {
+        case number = "id"
+        case fileName
+        case date
+        case type
+        case clientName
+    }
+
+    init(number: String, fileName: String, date: Date, type: DocumentType, clientName: String? = nil) {
+        self.number = number
+        self.fileName = fileName
+        self.date = date
+        self.type = type
+        self.clientName = clientName
+    }
 }
 
 enum DocumentStoreError: LocalizedError {
@@ -47,7 +73,17 @@ final class DocumentStore {
     private let directoryName = "SavedDocuments"
     private let indexFileName = "metadata.json"
 
-    private init() {}
+    /// Overrides the parent of the archive folder. Only used by tests, so they can
+    /// exercise the real read/write paths without touching the user's documents.
+    private let rootOverride: URL?
+
+    private init() {
+        self.rootOverride = nil
+    }
+
+    init(rootDirectory: URL) {
+        self.rootOverride = rootDirectory
+    }
 
     // MARK: - Locations
 
@@ -55,7 +91,7 @@ final class DocumentStore {
     /// launch does not leave the store permanently broken for the session.
     private func directoryURL() throws -> URL {
         do {
-            let documents = try FileManager.default.url(
+            let documents = try rootOverride ?? FileManager.default.url(
                 for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true
             )
             let directory = documents.appendingPathComponent(directoryName)
@@ -180,7 +216,7 @@ final class DocumentStore {
             throw DocumentStoreError.writeFailed(underlying: error)
         }
 
-        index.removeAll { $0.id == document.id && $0.type == document.type }
+        index.removeAll { $0.id == document.id }
         index.append(document)
         index.sort { $0.date > $1.date }
         try writeIndexLocked(index)
@@ -200,8 +236,138 @@ final class DocumentStore {
                 throw DocumentStoreError.writeFailed(underlying: error)
             }
         }
+        removeDraftFileLocked(for: document)
 
-        index.removeAll { $0.id == document.id && $0.type == document.type }
+        index.removeAll { $0.id == document.id }
         try writeIndexLocked(index)
+    }
+}
+
+// MARK: - Editable invoice sources
+
+extension DocumentStore {
+
+    /// Suffix for the sidecar that holds an invoice's editable source, written
+    /// beside its PDF. Its *presence* is what makes an invoice editable:
+    /// documents archived by earlier versions simply have no sidecar and stay
+    /// view/export-only. Nothing about them is read or rewritten.
+    private static let draftSuffix = ".invoice.json"
+
+    private func draftURL(for document: SavedDocument) throws -> URL {
+        let safeName = Self.sanitizedFileComponent(document.fileName, fallback: "document.pdf")
+        let stem = (safeName as NSString).deletingPathExtension
+        return try directoryURL().appendingPathComponent(stem + Self.draftSuffix)
+    }
+
+    /// The editable source for a document, or `nil` when there is none — which is
+    /// the normal case for anything archived before this feature existed.
+    func draft(for document: SavedDocument) -> InvoiceDraft? {
+        guard document.type == .invoice,
+              let url = try? draftURL(for: document),
+              let data = try? Data(contentsOf: url) else { return nil }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try? decoder.decode(InvoiceDraft.self, from: data)
+    }
+
+    /// Ids of archived documents that have an editable source, so a list can be
+    /// rendered without a filesystem check per row.
+    func idsWithDrafts() -> Set<String> {
+        guard let directory = try? directoryURL(),
+              let names = try? FileManager.default.contentsOfDirectory(atPath: directory.path)
+        else { return [] }
+
+        let stems = Set(
+            names
+                .filter { $0.hasSuffix(Self.draftSuffix) }
+                .map { String($0.dropLast(Self.draftSuffix.count)) }
+        )
+
+        return Set(
+            listDocuments()
+                .filter { document in
+                    let safeName = Self.sanitizedFileComponent(document.fileName, fallback: "document.pdf")
+                    return stems.contains((safeName as NSString).deletingPathExtension)
+                }
+                .map(\.id)
+        )
+    }
+
+    /// Removes the archive folder entirely. Test-only; guarded so it can never run
+    /// against the user's real documents directory.
+    func removeAllForTesting() throws {
+        guard rootOverride != nil else {
+            assertionFailure("removeAllForTesting() is only valid on an injected store")
+            return
+        }
+        let directory = try directoryURL()
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    /// The archive filename for an invoice number.
+    static func invoiceFileName(for number: String) -> String {
+        "Invoice-\(sanitizedFileComponent(number, fallback: "unnumbered")).pdf"
+    }
+
+    /// Writes an invoice's PDF and its editable source together.
+    ///
+    /// If `replacing` is given and its number changed, the old PDF and sidecar are
+    /// removed so an edit renames rather than leaving a duplicate behind.
+    @discardableResult
+    func save(invoice draft: InvoiceDraft, pdf: Data, replacing previous: SavedDocument?) throws -> SavedDocument {
+        let document = SavedDocument(
+            number: draft.number,
+            fileName: Self.invoiceFileName(for: draft.number),
+            date: draft.invoiceDate,
+            type: .invoice,
+            clientName: draft.clientName
+        )
+
+        lock.lock()
+        defer { lock.unlock() }
+
+        var index = try loadIndexLocked()
+
+        let pdfURL = try fileURL(for: document)
+        do {
+            try pdf.write(to: pdfURL, options: .atomic)
+        } catch {
+            throw DocumentStoreError.writeFailed(underlying: error)
+        }
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = .prettyPrinted
+        do {
+            let data = try encoder.encode(draft)
+            try data.write(to: try draftURL(for: document), options: .atomic)
+        } catch let error as DocumentStoreError {
+            throw error
+        } catch {
+            throw DocumentStoreError.writeFailed(underlying: error)
+        }
+
+        // An edit that changed the invoice number leaves files under the old name.
+        if let previous, previous.id != document.id {
+            if let oldPDF = try? fileURL(for: previous),
+               FileManager.default.fileExists(atPath: oldPDF.path) {
+                try? FileManager.default.removeItem(at: oldPDF)
+            }
+            removeDraftFileLocked(for: previous)
+            index.removeAll { $0.id == previous.id }
+        }
+
+        index.removeAll { $0.id == document.id }
+        index.append(document)
+        index.sort { $0.date > $1.date }
+        try writeIndexLocked(index)
+
+        return document
+    }
+
+    fileprivate func removeDraftFileLocked(for document: SavedDocument) {
+        guard let url = try? draftURL(for: document),
+              FileManager.default.fileExists(atPath: url.path) else { return }
+        try? FileManager.default.removeItem(at: url)
     }
 }
