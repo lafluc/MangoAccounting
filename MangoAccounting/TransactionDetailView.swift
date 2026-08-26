@@ -24,9 +24,10 @@ struct TransactionDetailView: View {
         .background(AppTheme.background.ignoresSafeArea())
         .toolbar { detailToolbar }
         .sheet(isPresented: $showEditSheet) {
-            NavigationView {
+            NavigationStack {
                 AddTransactionView(transactionToEdit: transaction)
             }
+            .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
         }
         .alert("Are you sure?", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) { deleteTransaction() }
@@ -46,7 +47,7 @@ struct TransactionDetailView: View {
             Text(saveErrorMessage ?? "")
         }
         #if os(macOS)
-        .frame(minWidth: 380, idealWidth: 480, minHeight: 450)
+        .frame(minWidth: 380, idealWidth: 480, minHeight: 560)
         #endif
     }
     

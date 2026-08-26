@@ -37,6 +37,7 @@ struct AddTransactionView: View {
     @State private var carKilometers: Double?
     @State private var showCategorySheet = false
     @State private var saveErrorMessage: String?
+    @State private var hasLoadedTransaction = false
 
     // MARK: - Attachment State
     @State private var selectedPhotoItem: PhotosPickerItem?
@@ -52,35 +53,43 @@ struct AddTransactionView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Picker("Type", selection: $type) {
-                        ForEach(types, id: \.self) { Text(LocalizedStringKey($0)) }
-                    }
-                    .pickerStyle(.segmented)
-                    
-                    detailsSection
-                    
-                    if category == "Car Expenses" {
-                        carExpensesSection
-                    }
-                    
-                    attachmentSection
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Picker("Type", selection: $type) {
+                    ForEach(types, id: \.self) { Text(LocalizedStringKey($0)) }
                 }
+                .pickerStyle(.segmented)
+
+                detailsSection
+
+                if category == "Car Expenses" {
+                    carExpensesSection
+                }
+
+                attachmentSection
             }
-            
-            Button("Save") { saveTransaction() }
-                .buttonStyle(PillButtonStyle())
-                .disabled(details.isEmpty || originalAmountInput == nil)
-                .padding(.vertical)
+            .padding(.horizontal)
+            .padding(.top)
         }
-        .padding(.horizontal)
+        // A safe-area inset is laid out outside the scrolling content, so the
+        // action bar keeps its height no matter how little room the sheet gets.
+        // Previously Save was a sibling of an unbounded ScrollView, so a short
+        // sheet clipped it away entirely and only the toolbar's Cancel survived.
+        .safeAreaInset(edge: .bottom, spacing: 0) { actionBar }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle(Text(LocalizedStringKey(navigationTitle)))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+            }
+            // Save also lives in the toolbar, which cannot be clipped at any
+            // window size, so the primary action is always reachable.
+            ToolbarItem(placement: .confirmationAction) {
+                Button(saveButtonTitle) { saveTransaction() }
+                    .disabled(!canSave)
+                    .keyboardShortcut("s", modifiers: .command)
             }
         }
         .sheet(isPresented: $showCategorySheet) {
@@ -113,7 +122,7 @@ struct AddTransactionView: View {
                 print("Error picking file: \(error.localizedDescription)")
             }
         }
-        .onAppear(perform: loadTransactionData)
+        .task { loadTransactionDataOnce() }
         .alert(
             "Could Not Save",
             isPresented: Binding(
@@ -125,9 +134,28 @@ struct AddTransactionView: View {
         } message: {
             Text(saveErrorMessage ?? "")
         }
-        #if os(macOS)
-        .frame(minWidth: 400, idealWidth: 500, minHeight: 600)
-        #endif
+    }
+
+    private var actionBar: some View {
+        VStack(spacing: 0) {
+            Divider()
+            Button(saveButtonTitle) { saveTransaction() }
+                .buttonStyle(PillButtonStyle())
+                .disabled(!canSave)
+                .keyboardShortcut(.defaultAction)
+                .padding(.horizontal)
+                .padding(.vertical, 12)
+        }
+        .background(.bar)
+    }
+
+    private var saveButtonTitle: LocalizedStringKey {
+        transactionToEdit == nil ? "Save" : "Update"
+    }
+
+    private var canSave: Bool {
+        !details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && originalAmountInput != nil
     }
 
     private var detailsSection: some View {
@@ -299,6 +327,17 @@ struct AddTransactionView: View {
         }
     }
     
+    /// Populates the form from the edited object exactly once.
+    ///
+    /// This used to run from `.onAppear`, which fires again whenever the view
+    /// reappears — including on return from the category-management sheet — and
+    /// silently overwrote every field the user had just typed.
+    private func loadTransactionDataOnce() {
+        guard !hasLoadedTransaction else { return }
+        hasLoadedTransaction = true
+        loadTransactionData()
+    }
+
     private func loadTransactionData() {
         if let transaction = transactionToEdit {
             type = transaction.type ?? "Expense"

@@ -129,9 +129,13 @@ struct TransactionsListView: View {
             .navigationTitle("Transactions")
             .toolbar { mainToolbar }
             .sheet(isPresented: $showAddSheet) {
-                NavigationView {
+                NavigationStack {
                     AddTransactionView()
                 }
+                // A macOS sheet is sized from the fitting size of its root, and a
+                // NavigationView/Stack does not forward its child's minimums. The
+                // frame has to be here, not inside AddTransactionView.
+                .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
             }
         }
         .onChange(of: selectedSortOption) { updateFetchRequest() }
@@ -170,7 +174,7 @@ struct TransactionsListView: View {
         .navigationViewStyle(.stack)
         #endif
         #if os(macOS)
-        .frame(minWidth: 700, minHeight: 400)
+        .frame(minWidth: 700, minHeight: 620)
         #endif
     }
 
