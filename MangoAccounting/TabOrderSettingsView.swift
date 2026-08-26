@@ -28,16 +28,12 @@ struct TabOrderSettingsView: View {
     }
 
     private func loadTabs() {
-        if let decodedOrder = try? JSONDecoder().decode([TabItem].self, from: settings.tabOrderData) {
-            self.tabs = decodedOrder
-        } else {
-            self.tabs = TabItem.allCases
-        }
+        self.tabs = TabItem.decodeOrder(from: settings.tabOrderData)
     }
 
     private func move(from source: IndexSet, to destination: Int) {
         tabs.move(fromOffsets: source, toOffset: destination)
-        if let encodedOrder = try? JSONEncoder().encode(tabs) {
+        if let encodedOrder = TabItem.encodeOrder(tabs) {
             settings.tabOrderData = encodedOrder
         }
     }

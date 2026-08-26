@@ -40,13 +40,8 @@ struct ContentView: View {
     }
     
     private func loadTabOrder() {
-        if let decodedOrder = try? JSONDecoder().decode([TabItem].self, from: userSettings.tabOrderData), !decodedOrder.isEmpty {
-            self.tabOrder = decodedOrder
-        } else {
-            // Set default order if none is saved
-            self.tabOrder = TabItem.allCases
-        }
-        
+        self.tabOrder = TabItem.decodeOrder(from: userSettings.tabOrderData)
+
         // Ensure the selected tab is valid, otherwise default to the first in the order
         if !tabOrder.contains(tabManager.selectedTab) {
             if let firstTab = tabOrder.first {
