@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Fallback for a free Apple ID, which cannot issue a Developer ID
+	     certificate. The result is what has been shipped so far: it runs, but
+	     Gatekeeper blocks the first launch and each user has to right-click the
+	     app and choose Open once. -->
+	<key>method</key>
+	<string>development</string>
+	<key>teamID</key>
+	<string>LUR83WQX7W</string>
+	<key>signingStyle</key>
+	<string>automatic</string>
+	<key>destination</key>
+	<string>export</string>
+</dict>
+</plist>
