@@ -1,0 +1,40 @@
+# ---- macOS ----
+.DS_Store
+
+# ---- Xcode user state (per-developer, not shared) ----
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# ---- Build products & derived data ----
+build/
+DerivedData/
+*.xcarchive
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ---- Distribution artifacts (rebuildable; do not version) ----
+*.zip
+MangoAccounting 2025-10-15 20-57-11/
+
+# ---- Generated analysis output (regenerate with summarize_project.py) ----
+summary.txt
+
+# ---- Swift Package Manager ----
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+# ---- Secrets / signing material (must never be committed) ----
+*.p12
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+.env
+.env.*
