@@ -145,13 +145,13 @@ struct RecentTransactionsSection: View {
                 // FIX: Use the generic CardView container
                 CardView {
                     VStack(spacing: 0) {
-                        ForEach(transactions) { t in
+                        ForEach(transactions, id: \.objectID) { t in
                             NavigationLink(destination: TransactionDetailView(transaction: t)) {
                                 TransactionRowView(transaction: t)
                                     .padding(.vertical, 8) // Adjusted padding
                             }
                             .buttonStyle(.plain)
-                            if t.id != transactions.last?.id {
+                            if t.objectID != transactions.last?.objectID {
                                 Divider().background(AppTheme.background)
                             }
                         }

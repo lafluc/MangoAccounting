@@ -12,6 +12,9 @@ struct AddTransactionView: View {
     @StateObject private var userSettings = UserSettings() // To access currency list
     
     var transactionToEdit: TransactionItem?
+    /// When set, the form opens as a *new* transaction prefilled from this one.
+    /// Used by the Duplicate action; the source object is never modified.
+    var prefillSource: TransactionItem?
     @State private var type: String = "Expense"
     @State private var details: String = ""
     @State private var date: Date = .now
@@ -39,6 +42,14 @@ struct AddTransactionView: View {
     @State private var saveErrorMessage: String?
     @State private var hasLoadedTransaction = false
 
+    // MARK: - Title Suggestions
+    @State private var allTitleSuggestions: [TitleSuggestion] = []
+    @FocusState private var isDescriptionFocused: Bool
+
+    private var titleSuggestions: [TitleSuggestion] {
+        TitleSuggestionStore.rank(allTitleSuggestions, matching: details)
+    }
+
     // MARK: - Attachment State
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showingFileImporter = false
@@ -51,6 +62,9 @@ struct AddTransactionView: View {
     private var navigationTitle: String {
         transactionToEdit == nil ? "New Transaction" : "Edit Transaction"
     }
+
+    /// Suggestions are only offered while composing; an edit already has a title.
+    private var showsSuggestions: Bool { transactionToEdit == nil }
 
     var body: some View {
         ScrollView {
@@ -122,7 +136,10 @@ struct AddTransactionView: View {
                 print("Error picking file: \(error.localizedDescription)")
             }
         }
-        .task { loadTransactionDataOnce() }
+        .task {
+            loadTransactionDataOnce()
+            allTitleSuggestions = TitleSuggestionStore.loadAll(in: viewContext)
+        }
         .alert(
             "Could Not Save",
             isPresented: Binding(
@@ -163,6 +180,15 @@ struct AddTransactionView: View {
             Text("Details").font(AppTheme.headlineFont).foregroundColor(AppTheme.textSecondary)
             VStack {
                 TextField("Description (e.g., Lunch with client)", text: $details)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($isDescriptionFocused)
+                    .submitLabel(.done)
+
+                if showsSuggestions, !titleSuggestions.isEmpty {
+                    TitleSuggestionRow(suggestions: titleSuggestions) { suggestion in
+                        apply(suggestion)
+                    }
+                }
                 Divider()
                 
                 // MARK: - Currency Selection
@@ -327,6 +353,36 @@ struct AddTransactionView: View {
         }
     }
     
+    /// Fills in a previously-used title and the classification that usually goes
+    /// with it.
+    ///
+    /// The amount is deliberately left alone: it is the one field that normally
+    /// differs between two transactions sharing a title.
+    private func apply(_ suggestion: TitleSuggestion) {
+        details = suggestion.title
+
+        guard let previous = TitleSuggestionStore.mostRecentTransaction(
+            withTitle: suggestion.title, in: viewContext
+        ) else { return }
+
+        // Type first: it decides which categories are offered.
+        if let previousType = previous.type, !previousType.isEmpty {
+            type = previousType
+        }
+        if let previousCategory = previous.category, !previousCategory.isEmpty {
+            category = previousCategory
+        }
+        if let previousCurrency = previous.currencyCode, !previousCurrency.isEmpty,
+           previousCurrency != "OTHER" {
+            selectedCurrency = previousCurrency
+            isCustomCurrency = false
+            if previousCurrency != "CHF", previous.originalAmount > 0 {
+                // Carry the rate over as a starting point; the amount stays empty.
+                exchangeRate = previous.amount / previous.originalAmount
+            }
+        }
+    }
+
     /// Populates the form from the edited object exactly once.
     ///
     /// This used to run from `.onAppear`, which fires again whenever the view
@@ -339,6 +395,19 @@ struct AddTransactionView: View {
     }
 
     private func loadTransactionData() {
+        if transactionToEdit == nil, let source = prefillSource {
+            // A duplicate: copy the classification, keep today's date, and leave
+            // the amount and any attachment for the user to supply.
+            type = source.type ?? "Expense"
+            details = source.details ?? ""
+            category = source.category ?? ""
+            selectedCurrency = source.currencyCode ?? "CHF"
+            if source.currencyCode != "CHF", source.originalAmount > 0 {
+                exchangeRate = source.amount / source.originalAmount
+            }
+            return
+        }
+
         if let transaction = transactionToEdit {
             type = transaction.type ?? "Expense"
             details = transaction.details ?? ""
@@ -379,7 +448,9 @@ struct AddTransactionView: View {
         guard let finalBaseAmount = baseAmountCHF, let originalAmount = originalAmountInput else { return }
         
         let transaction = transactionToEdit ?? TransactionItem(context: viewContext)
-        if transactionToEdit == nil {
+        // Backfill rather than only assigning on insert: rows saved by earlier
+        // builds can have a nil id, and anything keyed on it then collides.
+        if transaction.id == nil {
             transaction.id = UUID()
         }
         

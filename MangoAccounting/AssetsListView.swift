@@ -10,7 +10,7 @@ struct AssetsListView: View {
     private var assets: FetchedResults<AssetItem>
     
     @State private var showAddSheet = false
-    @State private var assetToEdit: AssetItem?
+    @State private var assetToEdit: ManagedObjectBox<AssetItem>?
     
     // Deletion State
     @State private var assetToDelete: AssetItem?
@@ -28,9 +28,9 @@ struct AssetsListView: View {
                     )
                 } else {
                     List {
-                        ForEach(assets) { asset in
+                        ForEach(assets, id: \.objectID) { asset in
                             Button {
-                                assetToEdit = asset
+                                assetToEdit = ManagedObjectBox(asset)
                             } label: {
                                 AssetRowView(asset: asset)
                             }
@@ -59,14 +59,14 @@ struct AssetsListView: View {
                 }
             }
             .sheet(isPresented: $showAddSheet) {
-                NavigationView {
+                NavigationStack {
                     AddAssetView()
                 }
                 .frame(minWidth: 500, minHeight: 650)
             }
-            .sheet(item: $assetToEdit) { asset in
-                NavigationView {
-                    AddAssetView(assetToEdit: asset)
+            .sheet(item: $assetToEdit) { box in
+                NavigationStack {
+                    AddAssetView(assetToEdit: box.object)
                 }
                 .frame(minWidth: 500, minHeight: 650)
             }

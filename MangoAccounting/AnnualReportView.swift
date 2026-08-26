@@ -193,7 +193,7 @@ struct AnnualReportView: View {
     }
 
     private func saveReport(data: Data) {
-        let doc = SavedDocument(id: String(selectedYear), fileName: "Erfolgsrechnung-\(selectedYear).pdf", date: .now, type: .report)
+        let doc = SavedDocument(number: String(selectedYear), fileName: "Erfolgsrechnung-\(selectedYear).pdf", date: .now, type: .report)
         do {
             try DocumentStore.shared.save(document: doc, data: data)
         } catch {

@@ -299,7 +299,9 @@ struct AddAssetView: View {
         }
 
         let asset = assetToEdit ?? AssetItem(context: viewContext)
-        if assetToEdit == nil {
+        // Backfill rather than only assigning on insert: rows saved by earlier
+        // builds can have a nil id, and anything keyed on it then collides.
+        if asset.id == nil {
             asset.id = UUID()
         }
 

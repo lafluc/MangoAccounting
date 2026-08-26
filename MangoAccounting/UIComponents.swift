@@ -94,3 +94,60 @@ struct SectionView<Content: View>: View {
         }
     }
 }
+
+/// A tappable chip, used for previously-used transaction titles.
+///
+/// The app had no reusable chip: the nearest visuals were inlined in
+/// `TransactionRowView` and the dashboard's timeframe picker.
+struct SuggestionChip: View {
+    let title: String
+    let detail: String?
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                Text(title)
+                    .lineLimit(1)
+                if let detail {
+                    Text(detail)
+                        .foregroundColor(AppTheme.textSecondary)
+                }
+            }
+            .font(.caption)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(AppTheme.accent.opacity(0.16))
+            .foregroundColor(AppTheme.textPrimary)
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(AppTheme.accent.opacity(0.35), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// Horizontal strip of title suggestions shown beneath the description field.
+struct TitleSuggestionRow: View {
+    let suggestions: [TitleSuggestion]
+    let onSelect: (TitleSuggestion) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(suggestions) { suggestion in
+                    SuggestionChip(
+                        title: suggestion.title,
+                        detail: suggestion.useCount > 1 ? "\(suggestion.useCount)\u{00D7}" : nil
+                    ) {
+                        onSelect(suggestion)
+                    }
+                    .help("Use this title and fill in its usual type, category and currency")
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        // A horizontal scroller inside a vertical one needs a fixed height or it
+        // fights the outer ScrollView for space.
+        .frame(height: 30)
+    }
+}

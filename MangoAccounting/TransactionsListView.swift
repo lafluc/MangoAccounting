@@ -81,6 +81,7 @@ struct TransactionsListView: View {
     @State private var offsetsToDelete: IndexSet?
     @State private var showDeleteConfirmation = false
     @State private var saveErrorMessage: String?
+    @State private var transactionToDuplicate: ManagedObjectBox<TransactionItem>?
 
     var body: some View {
         NavigationView {
@@ -137,6 +138,12 @@ struct TransactionsListView: View {
                 // frame has to be here, not inside AddTransactionView.
                 .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
             }
+            .sheet(item: $transactionToDuplicate) { source in
+                NavigationStack {
+                    AddTransactionView(prefillSource: source.object)
+                }
+                .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
+            }
         }
         .onChange(of: selectedSortOption) { updateFetchRequest() }
         .onChange(of: selectedFilterOption) { updateFetchRequest() }
@@ -188,12 +195,18 @@ struct TransactionsListView: View {
             )
         } else {
             List {
-                ForEach(filteredTransactions) { transaction in
+                ForEach(filteredTransactions, id: \.objectID) { transaction in
                     NavigationLink(destination: TransactionDetailView(transaction: transaction)) {
                         TransactionRowView(transaction: transaction)
                     }
                     .listRowBackground(Color.clear)
                     .contextMenu {
+                        Button {
+                            transactionToDuplicate = ManagedObjectBox(transaction)
+                        } label: {
+                            Label("Duplicate", systemImage: "plus.square.on.square")
+                        }
+                        Divider()
                         Button(role: .destructive) {
                             confirmDelete(transaction: transaction)
                         } label: {
