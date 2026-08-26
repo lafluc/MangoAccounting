@@ -9,13 +9,18 @@ import SwiftUI
 
 @main
 struct MangoAccountingApp: App {
-    let persistenceController = PersistenceController.shared
+    @StateObject private var persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
-            // Use MainView as the root view now
-            MainView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            // If the store could not be opened, show a recovery screen rather
+            // than launching into an app whose data is missing.
+            if persistenceController.loadFailure == nil {
+                MainView()
+                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            } else {
+                StoreRecoveryView(controller: persistenceController)
+            }
         }
     }
 }
