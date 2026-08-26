@@ -54,6 +54,7 @@ struct InvoiceGeneratorView: View {
 
     @State private var showOverwriteAlert = false
     @State private var dataToSave: Data?
+    @State private var saveErrorMessage: String?
     private var totalAmount: Double { lineItems.reduce(0) { $0 + max(0, $1.amount) } }
     private var a4Size = CGSize(width: 595.2, height: 841.8)
     private var isFormValid: Bool {
@@ -246,9 +247,9 @@ struct InvoiceGeneratorView: View {
         .frame(minWidth: 400, minHeight: 400)
         .alert("Invoice Number Exists", isPresented: $showOverwriteAlert) {
             Button("Overwrite", role: .destructive) {
-                if let data = dataToSave {
-                    saveInvoice(data: data)
-                }
+                let data = dataToSave
+                dataToSave = nil
+                if let data { saveInvoice(data: data) }
             }
             Button("Cancel", role: .cancel) {
                 dataToSave = nil
@@ -256,12 +257,29 @@ struct InvoiceGeneratorView: View {
         } message: {
             Text("An invoice with the number \"\(invoiceNumber)\" already exists.\nDo you want to overwrite it?")
         }
+        .alert(
+            "Invoice",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
+        }
     }
 
     private func initiateSave(data: Data) {
-        let existingIDs = DocumentStore.shared.listDocuments()
-            .filter { $0.type == .invoice }
-            .map { $0.id }
+        let existingIDs: [String]
+        do {
+            existingIDs = try DocumentStore.shared.documents()
+                .filter { $0.type == .invoice }
+                .map { $0.id }
+        } catch {
+            saveErrorMessage = error.localizedDescription
+            return
+        }
 
         if existingIDs.contains(invoiceNumber) {
             self.dataToSave = data
@@ -274,15 +292,22 @@ struct InvoiceGeneratorView: View {
     private func saveInvoice(data: Data) {
         let doc = SavedDocument(
             id: invoiceNumber,
-            fileName: "Invoice-\(invoiceNumber).pdf",
+            fileName: "Invoice-\(DocumentStore.sanitizedFileComponent(invoiceNumber, fallback: "unnumbered")).pdf",
             date: invoiceDate,
             type: .invoice,
             clientName: clientName
         )
         
-        DocumentStore.shared.save(document: doc, data: data)
+        do {
+            try DocumentStore.shared.save(document: doc, data: data)
+        } catch {
+            // Previously this path showed "Invoice Saved" and cleared the form
+            // even when nothing had been written, destroying the user's input.
+            saveErrorMessage = error.localizedDescription
+            return
+        }
         pdfPreviewItem = nil
-        
+
         withAnimation {
             showSaveToast = true
         }
@@ -331,11 +356,16 @@ struct InvoiceGeneratorView: View {
     
     private func generateSequentialInvoiceNumber() -> String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateFormat = "yyyyMMdd"
         let datePrefix = formatter.string(from: Date())
         let fullPrefix = "RE-\(datePrefix)"
 
         let allInvoices = DocumentStore.shared.listDocuments().filter { $0.type == .invoice }
+        // listDocuments() is the display-safe reader here on purpose: a suggested
+        // number is cosmetic, and initiateSave() re-checks against the throwing
+        // reader before anything is written.
 
         let existingSequenceNumbers: Set<Int> = Set(allInvoices.compactMap { doc -> Int? in
             if doc.id == fullPrefix {

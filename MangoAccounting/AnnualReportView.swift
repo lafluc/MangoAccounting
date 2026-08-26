@@ -18,6 +18,7 @@ struct AnnualReportView: View {
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var pdfPreviewItem: PDFPreview?
     @State private var showSaveToast = false
+    @State private var saveErrorMessage: String?
 
     @State private var inputLiquidAssets: Double?
     @State private var inputLiabilities: Double?
@@ -169,8 +170,19 @@ struct AnnualReportView: View {
             case .success:
                 break
             case .failure(let error):
-                print("Failed to export PDF: \(error)")
+                saveErrorMessage = error.localizedDescription
             }
+        }
+        .alert(
+            "Annual Report",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
         }
     }
 
@@ -182,7 +194,13 @@ struct AnnualReportView: View {
 
     private func saveReport(data: Data) {
         let doc = SavedDocument(id: String(selectedYear), fileName: "Erfolgsrechnung-\(selectedYear).pdf", date: .now, type: .report)
-        DocumentStore.shared.save(document: doc, data: data)
+        do {
+            try DocumentStore.shared.save(document: doc, data: data)
+        } catch {
+            // Keep the preview open so the user can retry rather than losing it.
+            saveErrorMessage = error.localizedDescription
+            return
+        }
         pdfPreviewItem = nil
 
         withAnimation { showSaveToast = true }

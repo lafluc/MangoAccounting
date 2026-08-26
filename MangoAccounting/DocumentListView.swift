@@ -10,13 +10,22 @@ class DocumentListViewModel: ObservableObject {
         didSet { updatePreview() }
     }
     @Published var previewData: Data?
+    /// Non-nil when the archive could not be read or written. Presented as an
+    /// alert; previously these failures were silent.
+    @Published var errorMessage: String?
     var allDocuments: [SavedDocument] = []
-    
+
     func reloadDocuments() {
-        let all = DocumentStore.shared.listDocuments()
+        let all: [SavedDocument]
+        do {
+            all = try DocumentStore.shared.documents()
+        } catch {
+            errorMessage = error.localizedDescription
+            return
+        }
         self.allDocuments = all
         self.documents = all
-        
+
         if selectedDocumentID == nil || !documents.contains(where: { $0.id == selectedDocumentID }) {
             selectedDocumentID = documents.first?.id
         } else {
@@ -47,13 +56,22 @@ class DocumentListViewModel: ObservableObject {
     }
     
     func delete(document: SavedDocument) {
-        DocumentStore.shared.delete(document: document)
+        do {
+            try DocumentStore.shared.delete(document: document)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
         reloadDocuments()
     }
-    
+
     func delete(at offsets: IndexSet) {
-        offsets.map { documents[$0] }.forEach { doc in
-            DocumentStore.shared.delete(document: doc)
+        for doc in offsets.map({ documents[$0] }) {
+            do {
+                try DocumentStore.shared.delete(document: doc)
+            } catch {
+                errorMessage = error.localizedDescription
+                break
+            }
         }
         reloadDocuments()
     }
@@ -86,7 +104,20 @@ struct DocumentListView: View {
             Text(String.localizedStringWithFormat(NSLocalizedString("This file (%@) will be permanently deleted.", comment: ""), doc.fileName))
         }
         .fileExporter(isPresented: $isExporting, document: documentToExport, contentType: .pdf) { result in
-            // Handle result if needed
+            if case .failure(let error) = result {
+                viewModel.errorMessage = error.localizedDescription
+            }
+        }
+        .alert(
+            "Saved Files",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
         }
     }
     
