@@ -41,6 +41,12 @@ struct AddTransactionView: View {
     @State private var showCategorySheet = false
     @State private var saveErrorMessage: String?
     @State private var hasLoadedTransaction = false
+    /// The rate implied by the stored amounts, kept so an untouched edit re-saves
+    /// the original CHF figure instead of one recomputed from a displayed rate.
+    @State private var storedExchangeRate: Double = 1.0
+    /// Held while stored values are written into the form, so the type picker's
+    /// onChange does not clear the category being restored.
+    @State private var isApplyingStoredValues = false
 
     // MARK: - Title Suggestions
     @State private var allTitleSuggestions: [TitleSuggestion] = []
@@ -76,7 +82,7 @@ struct AddTransactionView: View {
 
                 detailsSection
 
-                if category == "Car Expenses" {
+                if category == ReportGenerator.carExpensesCategory {
                     carExpensesSection
                 }
 
@@ -136,6 +142,16 @@ struct AddTransactionView: View {
                 print("Error picking file: \(error.localizedDescription)")
             }
         }
+        .onChange(of: type) {
+            // The two types offer different categories. Keeping a stale one left
+            // the picker blank while still saving the mismatched value, which then
+            // landed on the wrong side of the annual report.
+            guard !isApplyingStoredValues else { return }
+            let allowed = type == "Income"
+                ? categoryManager.incomeCategories
+                : categoryManager.expenseCategories
+            if !allowed.contains(category) { category = "" }
+        }
         .task {
             loadTransactionDataOnce()
             allTitleSuggestions = TitleSuggestionStore.loadAll(in: viewContext)
@@ -173,6 +189,15 @@ struct AddTransactionView: View {
     private var canSave: Bool {
         !details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && originalAmountInput != nil
+            && hasUsableCurrency
+            && !category.isEmpty
+    }
+
+    /// "OTHER" is the picker's sentinel for "let me type a code", not a currency.
+    /// It could previously be saved as one, and `addCurrency` then put it in the
+    /// shared list permanently.
+    private var hasUsableCurrency: Bool {
+        !isCustomCurrency && !selectedCurrency.isEmpty && selectedCurrency != "OTHER"
     }
 
     private var detailsSection: some View {
@@ -248,7 +273,7 @@ struct AddTransactionView: View {
                             .foregroundColor(AppTheme.textSecondary)
                             .font(.caption)
                         
-                        TextField("Rate", value: $exchangeRate, format: .number)
+                        TextField("Rate", value: $exchangeRate, format: .number.precision(.fractionLength(0...6)))
                             #if os(iOS)
                             .keyboardType(.decimalPad)
                             #endif
@@ -353,6 +378,18 @@ struct AddTransactionView: View {
         }
     }
     
+    /// Whether the amount, currency and rate are all exactly as stored.
+    private func moneyIsUnchanged(from transaction: TransactionItem?) -> Bool {
+        guard let transaction else { return false }
+        let storedCode = transaction.currencyCode ?? "CHF"
+        let storedOriginal = transaction.originalAmount > 0
+            ? transaction.originalAmount
+            : transaction.amount
+        return selectedCurrency == storedCode
+            && originalAmountInput == storedOriginal
+            && exchangeRate == storedExchangeRate
+    }
+
     /// Fills in a previously-used title and the classification that usually goes
     /// with it.
     ///
@@ -360,6 +397,8 @@ struct AddTransactionView: View {
     /// differs between two transactions sharing a title.
     private func apply(_ suggestion: TitleSuggestion) {
         details = suggestion.title
+        isApplyingStoredValues = true
+        defer { isApplyingStoredValues = false }
 
         guard let previous = TitleSuggestionStore.mostRecentTransaction(
             withTitle: suggestion.title, in: viewContext
@@ -391,7 +430,9 @@ struct AddTransactionView: View {
     private func loadTransactionDataOnce() {
         guard !hasLoadedTransaction else { return }
         hasLoadedTransaction = true
+        isApplyingStoredValues = true
         loadTransactionData()
+        isApplyingStoredValues = false
     }
 
     private func loadTransactionData() {
@@ -423,15 +464,12 @@ struct AddTransactionView: View {
             
             if storedCode == "CHF" {
                 originalAmountInput = storedCHF
+                storedExchangeRate = 1.0
                 exchangeRate = 1.0
             } else {
                 originalAmountInput = storedOriginal > 0 ? storedOriginal : storedCHF
-                // Calculate rate roughly if original exists, otherwise 1.0
-                if storedOriginal > 0 {
-                    exchangeRate = storedCHF / storedOriginal
-                } else {
-                    exchangeRate = 1.0
-                }
+                storedExchangeRate = storedOriginal > 0 ? storedCHF / storedOriginal : 1.0
+                exchangeRate = storedExchangeRate
             }
             
             attachmentData = transaction.billImage
@@ -470,7 +508,7 @@ struct AddTransactionView: View {
         transaction.billType = attachmentType
         transaction.billFilename = attachmentFilename
 
-        if category == "Car Expenses" {
+        if category == ReportGenerator.carExpensesCategory {
             transaction.carKilometers = carKilometers ?? 0
         } else {
             transaction.carKilometers = 0
