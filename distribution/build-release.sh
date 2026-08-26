@@ -34,8 +34,8 @@ if [[ "$mode" == "auto" ]]; then
 fi
 
 case "$mode" in
-  developer-id) options="distribution/ExportOptions-DeveloperID.plist" ;;
-  development)  options="distribution/ExportOptions-Development.plist" ;;
+  developer-id) export_options="distribution/ExportOptions-DeveloperID.plist" ;;
+  development)  export_options="distribution/ExportOptions-Development.plist" ;;
   *) print -u2 "Unknown mode: $mode (expected developer-id or development)"; exit 2 ;;
 esac
 
@@ -57,7 +57,7 @@ xcodebuild archive \
 
 xcodebuild -exportArchive \
   -archivePath "$ARCHIVE" \
-  -exportOptionsPlist "$options" \
+  -exportOptionsPlist "$export_options" \
   -exportPath "$BUILD_DIR/export" \
   -allowProvisioningUpdates
 
