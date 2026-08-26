@@ -215,7 +215,10 @@ struct CumulativeProfitChartView: View {
     let transactions: [TransactionItem]
     @State private var selectedDate: Date?
     @State private var selectedProfit: Double?
-    struct DailyNet: Identifiable { let id = UUID(); let date: Date; var cumulativeProfit: Double }
+    /// Identified by its date, not a fresh UUID: a new identity on every
+    /// recomputation made the chart re-animate from scratch on unrelated state
+    /// changes.
+    struct DailyNet: Identifiable { let date: Date; var cumulativeProfit: Double; var id: Date { date } }
     private var chartData: [DailyNet] {
         guard !transactions.isEmpty else { return [] }
         let calendar = FiscalCalendar.calendar
@@ -252,14 +255,14 @@ struct CumulativeProfitChartView: View {
             }
             .chartXAxis { AxisMarks(values: .automatic(desiredCount: 5)) { AxisGridLine().foregroundStyle(AppTheme.textSecondary); AxisValueLabel().foregroundStyle(AppTheme.textSecondary) } }
             .chartYAxis { AxisMarks { AxisGridLine().foregroundStyle(AppTheme.textSecondary); AxisValueLabel().foregroundStyle(AppTheme.textSecondary) } }
-            .chartOverlay { proxy in GeometryReader { geometry in Rectangle().fill(.clear).contentShape(Rectangle()).gesture(DragGesture(minimumDistance: 0).onChanged { value in let location = value.location; if let date: Date = proxy.value(atX: location.x) { updateSelection(at: date) } }.onEnded { _ in selectedDate = nil; selectedProfit = nil }) } }
+            .chartOverlay { proxy in GeometryReader { geometry in Rectangle().fill(.clear).contentShape(Rectangle()).gesture(DragGesture(minimumDistance: 8).onChanged { value in let location = value.location; if let date: Date = proxy.value(atX: location.x) { updateSelection(at: date) } }.onEnded { _ in selectedDate = nil; selectedProfit = nil }) } }
         }
     }
     private func updateSelection(at date: Date) { selectedDate = date; if let closestDataPoint = chartData.min(by: { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) }) { selectedProfit = closestDataPoint.cumulativeProfit } }
 }
 struct CategoryChartView: View {
     let transactions: [TransactionItem]
-    private struct CategorySummary: Identifiable { let id = UUID(); let category: String; let total: Double }
+    private struct CategorySummary: Identifiable { let category: String; let total: Double; var id: String { category } }
     private var categoryData: [CategorySummary] {
         let grouped = Dictionary(grouping: transactions) { $0.category ?? "Uncategorized" }
         return grouped.map { (cat, trans) in let total = trans.reduce(0) { $0 + $1.amount }; return CategorySummary(category: cat, total: total) }.sorted(by: { $0.total > $1.total })
@@ -268,7 +271,7 @@ struct CategoryChartView: View {
         Chart(categoryData) { data in
             SectorMark(angle: .value("Amount", data.total), innerRadius: .ratio(0.618), angularInset: 1.5).foregroundStyle(by: .value("Category", data.category)).cornerRadius(5)
         }
-        .chartForegroundStyleScale(range: [AppTheme.accent, AppTheme.accentSecondary, AppTheme.positive, AppTheme.negative])
+        .chartForegroundStyleScale(range: AppTheme.chartSeries)
         .chartLegend(position: .bottom, alignment: .center, spacing: 15)
     }
 }

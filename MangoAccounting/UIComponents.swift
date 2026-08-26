@@ -12,6 +12,7 @@ struct PlaceholderView: View {
             Image(systemName: systemImageName)
                 .font(.system(size: 50, weight: .light))
                 .foregroundColor(AppTheme.accent.opacity(0.7))
+                .accessibilityHidden(true)
 
             VStack(spacing: 4) {
                 Text(title)
@@ -35,10 +36,13 @@ struct TransactionRowView: View {
 
     var body: some View {
         HStack(spacing: 15) {
+            // Direction is otherwise conveyed by icon and colour alone, which is
+            // invisible to VoiceOver and to anyone who cannot distinguish the two.
             Image(systemName: transaction.type == "Income" ? "arrow.down.circle.fill" : "arrow.up.circle.fill")
                 .font(.title2)
                 .foregroundColor(transaction.type == "Income" ? AppTheme.positive : AppTheme.negative)
                 .frame(width: 25, alignment: .center)
+                .accessibilityLabel(transaction.type == "Income" ? "Income" : "Expense")
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(transaction.details ?? "—")
@@ -126,28 +130,104 @@ struct SuggestionChip: View {
     }
 }
 
-/// Horizontal strip of title suggestions shown beneath the description field.
+/// Strip of title suggestions shown beneath the description field.
+///
+/// Wraps onto further lines rather than scrolling horizontally: with up to eight
+/// chips a scroller would hide most of them behind an edge the user has no reason
+/// to suspect, and a nested horizontal scroller also fights the form's own
+/// vertical one for space.
 struct TitleSuggestionRow: View {
     let suggestions: [TitleSuggestion]
     let onSelect: (TitleSuggestion) -> Void
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                ForEach(suggestions) { suggestion in
-                    SuggestionChip(
-                        title: suggestion.title,
-                        detail: suggestion.useCount > 1 ? "\(suggestion.useCount)\u{00D7}" : nil
-                    ) {
-                        onSelect(suggestion)
-                    }
-                    .help("Use this title and fill in its usual type, category and currency")
+        WrappingHStack(spacing: 6, lineSpacing: 6) {
+            ForEach(suggestions) { suggestion in
+                SuggestionChip(
+                    title: suggestion.title,
+                    detail: suggestion.useCount > 1 ? "\(suggestion.useCount)\u{00D7}" : nil
+                ) {
+                    onSelect(suggestion)
                 }
+                .help("Use this title and fill in its usual type, category and currency")
             }
-            .padding(.vertical, 2)
         }
-        // A horizontal scroller inside a vertical one needs a fixed height or it
-        // fights the outer ScrollView for space.
-        .frame(height: 30)
+    }
+}
+
+/// Lays subviews out left to right, wrapping to a new line when the next one will
+/// not fit.
+///
+/// SwiftUI has no built-in wrapping stack, and the alternatives — a horizontal
+/// `ScrollView`, or a `LazyVGrid` with fixed columns — either hide content or
+/// force every item to a common width, which looks wrong for chips of varying
+/// length.
+struct WrappingHStack: Layout {
+    var spacing: CGFloat = 6
+    var lineSpacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let maxWidth = proposal.width ?? .infinity
+        let rows = arrange(subviews: subviews, in: maxWidth)
+
+        let height = rows.reduce(into: CGFloat.zero) { total, row in
+            total += row.height
+        } + lineSpacing * CGFloat(max(0, rows.count - 1))
+
+        let widest = rows.map(\.width).max() ?? 0
+        return CGSize(width: min(widest, maxWidth), height: height)
+    }
+
+    func placeSubviews(
+        in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()
+    ) {
+        let rows = arrange(subviews: subviews, in: bounds.width)
+        var y = bounds.minY
+
+        for row in rows {
+            var x = bounds.minX
+            for index in row.indices {
+                let size = subviews[index].sizeThatFits(.unspecified)
+                subviews[index].place(
+                    at: CGPoint(x: x, y: y + (row.height - size.height) / 2),
+                    proposal: ProposedViewSize(size)
+                )
+                x += size.width + spacing
+            }
+            y += row.height + lineSpacing
+        }
+    }
+
+    private struct Row {
+        var indices: [Int] = []
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+    }
+
+    private func arrange(subviews: Subviews, in maxWidth: CGFloat) -> [Row] {
+        var rows: [Row] = []
+        var current = Row()
+
+        for index in subviews.indices {
+            let size = subviews[index].sizeThatFits(.unspecified)
+            let widthIfAdded = current.indices.isEmpty
+                ? size.width
+                : current.width + spacing + size.width
+
+            if !current.indices.isEmpty && widthIfAdded > maxWidth {
+                rows.append(current)
+                current = Row()
+                current.indices = [index]
+                current.width = size.width
+                current.height = size.height
+            } else {
+                current.indices.append(index)
+                current.width = widthIfAdded
+                current.height = max(current.height, size.height)
+            }
+        }
+
+        if !current.indices.isEmpty { rows.append(current) }
+        return rows
     }
 }

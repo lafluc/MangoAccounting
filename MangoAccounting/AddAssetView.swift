@@ -231,8 +231,9 @@ struct AddAssetView: View {
                     Button("Delete Asset", role: .destructive) {
                         showDeleteConfirmation = true
                     }
-                    .buttonStyle(PillButtonStyle())
-                    .tint(.red)
+                    // A destructive action used to render as the same mango pill as
+                    // the primary Save button right above it.
+                    .buttonStyle(PillButtonStyle(role: .destructive))
                 }
             }
             .padding()

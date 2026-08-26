@@ -139,6 +139,17 @@ TRANSLATIONS: dict[str, tuple[str, str]] = {
     "The database is available again.": (
         "Die Datenbank ist wieder verfügbar.", "D'Datnbank is widda do."),
 
+    # ---- Appearance and accessibility (added with the visual refresh) ----
+    "System": ("System", "System"),
+    "Light": ("Hell", "Hell"),
+    "Dark": ("Dunkel", "Dunkl"),
+    "Tabs": ("Tabs", "Tabs"),
+    "Manage categories": ("Kategorien verwalten", "Kategorien verwaltn"),
+    "Remove attachment": ("Anhang entfernen", "Anhang wegmacha"),
+    "Delete category": ("Kategorie löschen", "Kategorie löschn"),
+    "Rename category": ("Kategorie umbenennen", "Kategorie umbenenna"),
+    "Currency": ("Währung", "Währung"),
+
     # The generated annual report is a Swiss statutory document and stays in
     # German in every language. Stated explicitly so it reads as a decision
     # rather than an untranslated key falling back to its own text.

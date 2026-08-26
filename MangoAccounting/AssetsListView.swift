@@ -107,6 +107,7 @@ struct AssetRowView: View {
     var body: some View {
         HStack(spacing: 15) {
             Image(systemName: "camera.macro")
+                .accessibilityHidden(true)
                 .font(.title2)
                 .foregroundColor(AppTheme.accent)
                 .frame(width: 25)

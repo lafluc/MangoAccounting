@@ -884,6 +884,22 @@
         }
       }
     },
+    "Dark": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dunkel"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dunkl"
+          }
+        }
+      }
+    },
     "Dashboard": {
       "localizations": {
         "de": {
@@ -976,6 +992,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Datei löschn"
+          }
+        }
+      }
+    },
+    "Delete category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie löschen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie löschn"
           }
         }
       }
@@ -1812,6 +1844,22 @@
         }
       }
     },
+    "Light": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hell"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hell"
+          }
+        }
+      }
+    },
     "Line Items": {
       "localizations": {
         "de": {
@@ -1888,6 +1936,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kategorien verwalddn"
+          }
+        }
+      }
+    },
+    "Manage categories": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorien verwalten"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorien verwaltn"
           }
         }
       }
@@ -2596,6 +2660,22 @@
         }
       }
     },
+    "Remove attachment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anhang entfernen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anhang wegmacha"
+          }
+        }
+      }
+    },
     "Remove this line": {
       "localizations": {
         "de": {
@@ -2613,6 +2693,22 @@
       }
     },
     "Rename Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie umbenennen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie umbenenna"
+          }
+        }
+      }
+    },
+    "Rename category": {
       "localizations": {
         "de": {
           "stringUnit": {
@@ -2992,6 +3088,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zammfassung für %d"
+          }
+        }
+      }
+    },
+    "System": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tabs"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tabs"
           }
         }
       }

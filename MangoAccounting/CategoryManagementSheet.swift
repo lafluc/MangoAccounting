@@ -37,12 +37,16 @@ struct CategoryManagementSheet: View {
                                         showRenameAlert = true
                                     } label: {
                                         Image(systemName: "pencil")
+                                            .help("Rename category")
+                                            .accessibilityLabel("Rename category")
                                     }
                                     .buttonStyle(.plain)
                                     .padding(.trailing, 8)
                                     .foregroundColor(AppTheme.accent)
 
                                     Button(role: .destructive) { deleteIncome(category: category) } label: { Image(systemName: "trash") }
+                                        .help("Delete category")
+                                        .accessibilityLabel("Delete category")
                                         .buttonStyle(.plain)
                                 }
                                 if category != categoryManager.incomeCategories.last { Divider() }
@@ -73,12 +77,16 @@ struct CategoryManagementSheet: View {
                                         showRenameAlert = true
                                     } label: {
                                         Image(systemName: "pencil")
+                                            .help("Rename category")
+                                            .accessibilityLabel("Rename category")
                                     }
                                     .buttonStyle(.plain)
                                     .padding(.trailing, 8)
                                     .foregroundColor(AppTheme.accent)
                                     
                                     Button(role: .destructive) { deleteExpense(category: category) } label: { Image(systemName: "trash") }
+                                        .help("Delete category")
+                                        .accessibilityLabel("Delete category")
                                         .buttonStyle(.plain)
                                 }
                                 if category != categoryManager.expenseCategories.last { Divider() }

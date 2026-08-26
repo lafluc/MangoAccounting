@@ -203,7 +203,8 @@ struct AddTransactionView: View {
     private var detailsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Details").font(AppTheme.headlineFont).foregroundColor(AppTheme.textSecondary)
-            VStack {
+            CardView {
+              VStack {
                 TextField("Description (e.g., Lunch with client)", text: $details)
                     .textFieldStyle(.roundedBorder)
                     .focused($isDescriptionFocused)
@@ -235,13 +236,15 @@ struct AddTransactionView: View {
                             }
                         }
                     } else {
-                        Picker("", selection: $selectedCurrency) {
+                        Picker("Currency", selection: $selectedCurrency) {
                             ForEach(userSettings.usedCurrencies, id: \.self) { currency in
                                 Text(currency).tag(currency)
                             }
                             Text("Other...").tag("OTHER")
                         }
                         .pickerStyle(.menu)
+                        .labelsHidden()
+                        .accessibilityLabel("Currency")
                         .onChange(of: selectedCurrency) {
                             if selectedCurrency == "OTHER" {
                                 isCustomCurrency = true
@@ -304,32 +307,33 @@ struct AddTransactionView: View {
                         }
                     }
                     Spacer()
-                    Button { showCategorySheet = true } label: { Image(systemName: "pencil.and.list.clipboard") }
-                        .buttonStyle(.borderless)
+                    Button { showCategorySheet = true } label: {
+                        Image(systemName: "pencil.and.list.clipboard")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Manage categories")
+                    .accessibilityLabel("Manage categories")
                 }
+              }
             }
-            .padding()
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppTheme.cornerRadius)
         }
     }
-    
+
     private var carExpensesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Car Expenses").font(AppTheme.headlineFont).foregroundColor(AppTheme.textSecondary)
-            VStack {
-                TextField("Kilometers", value: $carKilometers, format: .number)
+            CardView {
+                TextField("Kilometers", value: $carKilometers, format: .number.precision(.fractionLength(0...1)))
+                    .textFieldStyle(.roundedBorder)
             }
-            .padding()
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppTheme.cornerRadius)
         }
     }
 
     private var attachmentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Bill Attachment").font(AppTheme.headlineFont).foregroundColor(AppTheme.textSecondary)
-            VStack(spacing: 15) {
+            CardView {
+              VStack(spacing: 15) {
                 if let data = attachmentData, let type = attachmentType {
                     if type == "image", let uiImage = XImage(data: data) {
                         Image(xImage: uiImage)
@@ -366,15 +370,15 @@ struct AddTransactionView: View {
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                         }
+                        .help("Remove attachment")
+                        .accessibilityLabel("Remove attachment")
                     }
                     Spacer()
                 }
                 .tint(AppTheme.accent)
+              }
+              .frame(maxWidth: .infinity)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppTheme.cornerRadius)
         }
     }
     
