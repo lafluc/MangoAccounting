@@ -106,6 +106,11 @@ struct DocumentListView: View {
     var body: some View {
         NavigationSplitView {
             sidebarList
+                #if os(macOS)
+                // Without a width the sidebar collapses so far that the empty-state
+                // text wrapped to one word per line.
+                .navigationSplitViewColumnWidth(min: 300, ideal: 340, max: 460)
+                #endif
         } detail: {
             detailView
         }
