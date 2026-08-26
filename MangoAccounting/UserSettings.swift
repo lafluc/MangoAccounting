@@ -28,6 +28,22 @@ class UserSettings: ObservableObject {
         }
     }
     
+    /// A locale the system can actually resolve, for formatting numbers, currency
+    /// and dates.
+    ///
+    /// `language` may be "frk" (Oberfränkisch), which is a real user-facing choice
+    /// for *strings* but not a locale Foundation knows. Formatting against it falls
+    /// back unpredictably — and numeric text fields parse against it too, so a
+    /// Swiss user typing "1234,50" could get an unpredictable value. Swiss German
+    /// formatting is the right pairing for the dialect and for CHF amounts.
+    var formattingLocaleIdentifier: String {
+        switch language {
+        case "frk": return "de_CH"
+        case "de": return "de_CH"
+        default: return language
+        }
+    }
+
     func addCurrency(_ code: String) {
         var currents = usedCurrencies
         if !currents.contains(code) {

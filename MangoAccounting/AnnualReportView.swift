@@ -15,35 +15,40 @@ struct AnnualReportView: View {
         animation: .default)
     private var allAssets: FetchedResults<AssetItem>
 
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedYear: Int = FiscalCalendar.year(of: Date())
     @State private var pdfPreviewItem: PDFPreview?
     @State private var showSaveToast = false
     @State private var saveErrorMessage: String?
 
+    /// Bank balance and debts, kept per year.
+    ///
+    /// These were view state only, and on macOS the tab's view is swapped out on
+    /// every tab change — so the figures the user typed vanished and a regenerated
+    /// PDF quietly reported zero.
+    @AppStorage("balanceSheetInputs") private var balanceSheetInputsData: Data = Data()
     @State private var inputLiquidAssets: Double?
     @State private var inputLiabilities: Double?
 
     @State private var isExportingPDF = false
     @State private var pdfFileToExport: PDFFile?
 
-    private var yearFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .none
-        formatter.groupingSeparator = ""
-        return formatter
-    }
-
+    /// Years with data, plus the current year and whatever is selected.
+    ///
+    /// Rows without a date are excluded here *and* from the totals below, so the
+    /// two agree. Previously one branch dated them to today and the other to year
+    /// 1, which put a year in the picker whose totals then omitted that row. The
+    /// data model marks `date` as required, so this is a defensive case only.
     private var availableYears: [Int] {
-        let years = Set(allTransactions.compactMap {
-            Calendar.current.component(.year, from: $0.date ?? Date())
-        })
-        let allYears = years.isEmpty ? [selectedYear] : Array(years)
-        return allYears.sorted(by: >)
+        var years = Set(allTransactions.compactMap { $0.date.map(FiscalCalendar.year(of:)) })
+        years.insert(FiscalCalendar.year(of: Date()))
+        years.insert(selectedYear)
+        return years.sorted(by: >)
     }
 
     private var transactionsForSelectedYear: [TransactionItem] {
         allTransactions.filter {
-            Calendar.current.component(.year, from: $0.date ?? .distantPast) == selectedYear
+            guard let date = $0.date else { return false }
+            return FiscalCalendar.year(of: date) == selectedYear
         }
     }
 
@@ -61,6 +66,8 @@ struct AnnualReportView: View {
         reportContent
             .navigationTitle("Annual Report")
             .background(AppTheme.background.ignoresSafeArea())
+            .task { loadBalanceSheetInputs() }
+            .onChange(of: selectedYear) { loadBalanceSheetInputs() }
     }
 
     private var reportContent: some View {
@@ -69,7 +76,7 @@ struct AnnualReportView: View {
                 VStack(spacing: 24) {
                     Picker("Year", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
-                            Text(yearFormatter.string(from: NSNumber(value: year)) ?? "").tag(year)
+                            Text(FiscalCalendar.yearText(year)).tag(year)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -77,7 +84,7 @@ struct AnnualReportView: View {
                     let report = reportForSelectedYear
 
                     VStack(alignment: .leading, spacing: 20) {
-                        Text("Summary for \(yearFormatter.string(from: NSNumber(value: selectedYear)) ?? "")")
+                        Text("Summary for \(FiscalCalendar.yearText(selectedYear))")
                             .font(AppTheme.titleFont)
                             .foregroundColor(AppTheme.textPrimary)
 
@@ -99,12 +106,14 @@ struct AnnualReportView: View {
                     SectionView(title: "Balance Sheet Data (Stichtag 31.12.)") {
                         CardView {
                             VStack(spacing: 12) {
-                                TextField("Flussige Mittel (Bank/Kasse) in CHF", value: $inputLiquidAssets, format: .number)
+                                TextField("Liquid assets (bank/cash) in CHF", value: $inputLiquidAssets, format: .number.precision(.fractionLength(0...2)))
+                                    .onChange(of: inputLiquidAssets) { persistBalanceSheetInputs() }
                                     .textFieldStyle(.roundedBorder)
 
                                 Divider()
 
-                                TextField("Fremdkapital (Schulden) in CHF", value: $inputLiabilities, format: .number)
+                                TextField("Liabilities (debts) in CHF", value: $inputLiabilities, format: .number.precision(.fractionLength(0...2)))
+                                    .onChange(of: inputLiabilities) { persistBalanceSheetInputs() }
                                     .textFieldStyle(.roundedBorder)
                             }
                             .padding(.vertical, 4)
@@ -136,7 +145,7 @@ struct AnnualReportView: View {
     private func pdfPreviewSheet(for item: PDFPreview) -> some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Erfolgsrechnung \(yearFormatter.string(from: NSNumber(value: selectedYear)) ?? "")")
+                Text("Erfolgsrechnung \(FiscalCalendar.yearText(selectedYear))")
                     .font(.headline)
                 Spacer()
 
@@ -210,6 +219,34 @@ struct AnnualReportView: View {
         }
     }
 
+    // MARK: - Persisted balance-sheet inputs
+
+    /// Bank balance and debts keyed by fiscal year.
+    private var storedBalanceSheetInputs: [String: BalanceSheetInputs] {
+        (try? JSONDecoder().decode([String: BalanceSheetInputs].self, from: balanceSheetInputsData)) ?? [:]
+    }
+
+    private func loadBalanceSheetInputs() {
+        let stored = storedBalanceSheetInputs[FiscalCalendar.yearText(selectedYear)]
+        inputLiquidAssets = stored?.liquidAssets
+        inputLiabilities = stored?.liabilities
+    }
+
+    private func persistBalanceSheetInputs() {
+        var all = storedBalanceSheetInputs
+        let key = FiscalCalendar.yearText(selectedYear)
+        if inputLiquidAssets == nil && inputLiabilities == nil {
+            all.removeValue(forKey: key)
+        } else {
+            all[key] = BalanceSheetInputs(
+                liquidAssets: inputLiquidAssets, liabilities: inputLiabilities
+            )
+        }
+        if let encoded = try? JSONEncoder().encode(all) {
+            balanceSheetInputsData = encoded
+        }
+    }
+
     @MainActor
     private func generateReportPDF() {
         let mutableData = NSMutableData()
@@ -233,8 +270,21 @@ struct AnnualReportView: View {
             page: .balanceSheet
         )
 
-        let incomeRenderer = ImageRenderer(content: incomePage)
-        let balanceRenderer = ImageRenderer(content: balancePage)
+        // ImageRenderer does not inherit the SwiftUI environment, so the app's
+        // language never reached the report and it printed in the system locale.
+        // The scheme is pinned too: the app runs dark, and any semantic colour in
+        // the page would otherwise resolve to light-on-white.
+        let reportLocale = Locale(identifier: userSettings.formattingLocaleIdentifier)
+        let incomeRenderer = ImageRenderer(
+            content: incomePage
+                .environment(\.locale, reportLocale)
+                .environment(\.colorScheme, .light)
+        )
+        let balanceRenderer = ImageRenderer(
+            content: balancePage
+                .environment(\.locale, reportLocale)
+                .environment(\.colorScheme, .light)
+        )
 
         pdfContext.beginPDFPage(nil)
         incomeRenderer.render { _, renderInContext in renderInContext(pdfContext) }
@@ -293,4 +343,10 @@ struct ReportTotalRow: View {
             }
         }
     }
+}
+
+/// The two figures the balance sheet cannot derive from the ledger.
+struct BalanceSheetInputs: Codable, Hashable {
+    var liquidAssets: Double?
+    var liabilities: Double?
 }
