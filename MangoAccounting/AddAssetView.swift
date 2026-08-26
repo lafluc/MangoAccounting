@@ -41,6 +41,7 @@ struct AddAssetView: View {
     @State private var exchangeRate: Double = 1.0
 
     @State private var showDeleteConfirmation = false
+    @State private var saveErrorMessage: String?
 
     private var basePriceCHF: Double? {
         guard let original = originalPriceInput else { return nil }
@@ -231,6 +232,17 @@ struct AddAssetView: View {
                 Button("Cancel") { dismiss() }
             }
         }
+        .alert(
+            "Could Not Save",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
+        }
         .onAppear {
             if let asset = assetToEdit {
                 name = asset.name ?? ""
@@ -299,20 +311,23 @@ struct AddAssetView: View {
         asset.currencyCode = selectedCurrency
         asset.originalPrice = original
 
-        do {
-            try viewContext.save()
-            userSettings.addCurrency(selectedCurrency)
-            dismiss()
-        } catch {
-            print("Failed to save asset: \(error)")
+        if let message = viewContext.saveOrRollback() {
+            saveErrorMessage = message
+            return
         }
+        userSettings.addCurrency(selectedCurrency)
+        dismiss()
     }
 
     private func deleteAsset() {
-        if let asset = assetToEdit {
-            viewContext.delete(asset)
-            try? viewContext.save()
-            dismiss()
+        guard let asset = assetToEdit else { return }
+        viewContext.delete(asset)
+        if let message = viewContext.saveOrRollback() {
+            // Without the rollback in saveOrRollback the asset would vanish from
+            // the UI but survive on disk, reappearing on the next launch.
+            saveErrorMessage = message
+            return
         }
+        dismiss()
     }
 }

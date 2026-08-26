@@ -14,6 +14,7 @@ struct CategoryManagementSheet: View {
     // NEW: Renaming State
     @State private var categoryToRename: String?
     @State private var newCategoryName: String = ""
+    @State private var renameErrorMessage: String?
     @State private var isRenamingIncome: Bool = false
     @State private var showRenameAlert = false
 
@@ -119,6 +120,17 @@ struct CategoryManagementSheet: View {
             } message: {
                 Text("This will also update all existing transactions that use this category.")
             }
+            .alert(
+                "Could Not Rename",
+                isPresented: Binding(
+                    get: { renameErrorMessage != nil },
+                    set: { if !$0 { renameErrorMessage = nil } }
+                )
+            ) {
+                Button("OK", role: .cancel) { renameErrorMessage = nil }
+            } message: {
+                Text(renameErrorMessage ?? "")
+            }
         }
         #if os(macOS)
         .frame(minWidth: 400, idealWidth: 450, minHeight: 400)
@@ -179,11 +191,11 @@ struct CategoryManagementSheet: View {
             for transaction in transactionsToUpdate {
                 transaction.category = newName
             }
-            if viewContext.hasChanges {
-                try viewContext.save()
+            if let message = viewContext.saveOrRollback() {
+                renameErrorMessage = message
             }
         } catch {
-            print("Failed to cascade category rename to transactions: \(error)")
+            renameErrorMessage = (error as NSError).localizedDescription
         }
     }
 }

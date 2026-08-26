@@ -15,6 +15,7 @@ struct AssetsListView: View {
     // Deletion State
     @State private var assetToDelete: AssetItem?
     @State private var showDeleteConfirmation = false
+    @State private var deleteErrorMessage: String?
 
     var body: some View {
         NavigationView {
@@ -74,7 +75,9 @@ struct AssetsListView: View {
                 Button("Delete", role: .destructive) {
                     if let asset = assetToDelete {
                         viewContext.delete(asset)
-                        try? viewContext.save()
+                        if let message = viewContext.saveOrRollback() {
+                            deleteErrorMessage = message
+                        }
                     }
                 }
                 Button("Cancel", role: .cancel) {
@@ -82,6 +85,17 @@ struct AssetsListView: View {
                 }
             } message: {
                 Text("Are you sure you want to delete this asset? This action cannot be undone.")
+            }
+            .alert(
+                "Could Not Delete",
+                isPresented: Binding(
+                    get: { deleteErrorMessage != nil },
+                    set: { if !$0 { deleteErrorMessage = nil } }
+                )
+            ) {
+                Button("OK", role: .cancel) { deleteErrorMessage = nil }
+            } message: {
+                Text(deleteErrorMessage ?? "")
             }
         }
     }

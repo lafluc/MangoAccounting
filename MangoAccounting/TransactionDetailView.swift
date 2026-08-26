@@ -8,6 +8,7 @@ struct TransactionDetailView: View {
     @ObservedObject var transaction: TransactionItem
     
     @State private var showDeleteConfirmation = false
+    @State private var saveErrorMessage: String?
     @State private var showEditSheet = false
 
     var body: some View {
@@ -32,6 +33,17 @@ struct TransactionDetailView: View {
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("This transaction will be permanently deleted.")
+        }
+        .alert(
+            "Could Not Delete",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
         }
         #if os(macOS)
         .frame(minWidth: 380, idealWidth: 480, minHeight: 450)
@@ -131,8 +143,11 @@ struct TransactionDetailView: View {
     
     private func deleteTransaction() {
         viewContext.delete(transaction)
-        do { try viewContext.save(); dismiss() }
-        catch { print("Failed to delete transaction: \(error)") }
+        if let message = viewContext.saveOrRollback() {
+            saveErrorMessage = message
+            return
+        }
+        dismiss()
     }
     
     private func detailRow(label: String, value: String) -> some View {

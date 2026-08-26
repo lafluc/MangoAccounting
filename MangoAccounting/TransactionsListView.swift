@@ -80,6 +80,7 @@ struct TransactionsListView: View {
     @State private var transactionToDelete: TransactionItem?
     @State private var offsetsToDelete: IndexSet?
     @State private var showDeleteConfirmation = false
+    @State private var saveErrorMessage: String?
 
     var body: some View {
         NavigationView {
@@ -153,6 +154,17 @@ struct TransactionsListView: View {
             }
         } message: {
             Text("This transaction will be permanently deleted.")
+        }
+        .alert(
+            "Could Not Save",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
         }
         #if os(iOS)
         .navigationViewStyle(.stack)
@@ -302,11 +314,8 @@ struct TransactionsListView: View {
     }
     
     private func saveContext() {
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            print("Unresolved error \(nsError), \(nsError.userInfo)")
+        if let message = viewContext.saveOrRollback() {
+            saveErrorMessage = message
         }
     }
 }

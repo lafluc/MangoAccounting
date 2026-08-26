@@ -36,6 +36,7 @@ struct AddTransactionView: View {
     
     @State private var carKilometers: Double?
     @State private var showCategorySheet = false
+    @State private var saveErrorMessage: String?
 
     // MARK: - Attachment State
     @State private var selectedPhotoItem: PhotosPickerItem?
@@ -113,6 +114,17 @@ struct AddTransactionView: View {
             }
         }
         .onAppear(perform: loadTransactionData)
+        .alert(
+            "Could Not Save",
+            isPresented: Binding(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveErrorMessage = nil }
+        } message: {
+            Text(saveErrorMessage ?? "")
+        }
         #if os(macOS)
         .frame(minWidth: 400, idealWidth: 500, minHeight: 600)
         #endif
@@ -354,14 +366,12 @@ struct AddTransactionView: View {
             transaction.carKilometers = 0
         }
 
-        do {
-            try viewContext.save()
-            // Add currency to used list if new
-            userSettings.addCurrency(selectedCurrency)
-            dismiss()
-        } catch {
-            let nsError = error as NSError
-            print("Unresolved error \(nsError), \(nsError.userInfo)")
+        if let message = viewContext.saveOrRollback() {
+            saveErrorMessage = message
+            return
         }
+        // Add currency to used list if new
+        userSettings.addCurrency(selectedCurrency)
+        dismiss()
     }
 }
