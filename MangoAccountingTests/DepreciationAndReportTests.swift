@@ -220,3 +220,108 @@ struct ReportGeneratorTests {
         )
     }
 }
+
+/// Aggregate fetches (`min:`, `max:`, `count:`) are translated to SQL by the
+/// SQLite store. The in-memory store cannot do that and evaluates them in
+/// process, which throws `-[__NSTaggedDate count]: unrecognized selector`. These
+/// suites therefore need a real store on disk, as the app has.
+@MainActor
+private func withSQLiteContext(_ body: (NSManagedObjectContext) throws -> Void) throws {
+    let directory = URL(fileURLWithPath: NSTemporaryDirectory())
+        .appendingPathComponent("MangoAggregates-\(UUID().uuidString)")
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+
+    let container = NSPersistentContainer(
+        name: "MangoAccounting",
+        managedObjectModel: PersistenceController.shared.container.managedObjectModel
+    )
+    let description = NSPersistentStoreDescription(
+        url: directory.appendingPathComponent("MangoAccounting.sqlite")
+    )
+    description.type = NSSQLiteStoreType
+    container.persistentStoreDescriptions = [description]
+
+    var loadError: Error?
+    container.loadPersistentStores { _, error in loadError = error }
+    if let loadError { throw loadError }
+
+    try body(container.viewContext)
+
+    for store in container.persistentStoreCoordinator.persistentStores {
+        try? container.persistentStoreCoordinator.remove(store)
+    }
+}
+
+@Suite("Fiscal years spanned by the ledger")
+@MainActor
+struct TransactionYearsTests {
+
+    @Test("the year list covers every year with data, not a fixed window")
+    func spansActualData() throws {
+        try withSQLiteContext { context in
+            // 2019 is more than five years before 2026: the old picker hardcoded
+            // currentYear-5...currentYear+1, so it was unreachable.
+            for year in [2019, 2023, 2026] {
+                _ = makeTransaction(in: context, amount: 100, type: "Expense", category: "X", year: year)
+            }
+            try context.save()
+
+            let years = TransactionYears.spanned(in: context)
+            #expect(years.first == 2019)
+            #expect(years.last == 2026)
+            #expect(years.contains(2019), "a transaction older than five years must stay reachable")
+            #expect(years.contains(2021), "the span is contiguous, so gap years are offered too")
+        }
+    }
+
+    @Test("an empty ledger spans no years")
+    func emptyLedger() throws {
+        try withSQLiteContext { context in
+            #expect(TransactionYears.spanned(in: context).isEmpty)
+        }
+    }
+}
+
+@Suite("Title suggestions from the store")
+@MainActor
+struct TitleSuggestionStoreTests {
+
+    @Test("distinct titles come back with their use count and last use")
+    func aggregatesTitles() throws {
+        try withSQLiteContext { context in
+            for (title, year) in [("Coffee", 2024), ("Coffee", 2025), ("Coffee", 2026), ("Rent", 2026)] {
+                _ = makeTransaction(in: context, amount: 10, type: "Expense", category: "X", year: year)
+                    .setValue(title, forKey: "details")
+            }
+            try context.save()
+
+            let suggestions = TitleSuggestionStore.loadAll(in: context)
+            let byTitle = Dictionary(uniqueKeysWithValues: suggestions.map { ($0.title, $0) })
+
+            #expect(byTitle["Coffee"]?.useCount == 3)
+            #expect(byTitle["Rent"]?.useCount == 1)
+            #expect(
+                byTitle["Coffee"].map { FiscalCalendar.year(of: $0.lastUsed ?? .distantPast) } == 2026,
+                "lastUsed must be the most recent, not the first"
+            )
+
+            // The most-used title leads when nothing has been typed.
+            #expect(TitleSuggestionStore.rank(suggestions, matching: "").first?.title == "Coffee")
+        }
+    }
+
+    @Test("prefilling reads the most recent transaction with that title")
+    func mostRecentForPrefill() throws {
+        try withSQLiteContext { context in
+            let older = makeTransaction(in: context, amount: 10, type: "Expense", category: "Old", year: 2024)
+            older.setValue("Coffee", forKey: "details")
+            let newer = makeTransaction(in: context, amount: 20, type: "Expense", category: "New", year: 2026)
+            newer.setValue("Coffee", forKey: "details")
+            try context.save()
+
+            let found = TitleSuggestionStore.mostRecentTransaction(withTitle: "Coffee", in: context)
+            #expect(found?.category == "New", "prefill must use the latest entry, not the first")
+        }
+    }
+}

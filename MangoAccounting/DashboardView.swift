@@ -93,10 +93,19 @@ struct CustomTimeframePicker: View {
                         .font(AppTheme.bodyFont)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
-                        .background(selection == timeframe ? AppTheme.accent.opacity(0.3) : Color.clear)
-                        .foregroundColor(selection == timeframe ? AppTheme.accent : AppTheme.textSecondary)
-                        .cornerRadius(8)
+                        // A 30%-opacity accent wash sat at about 3:1 against the
+                        // card in light mode. The selected chip now uses the same
+                        // fill-and-label pair as the primary button, which is
+                        // legible in both appearances.
+                        .background(selection == timeframe ? AppTheme.accentFill : Color.clear)
+                        .foregroundColor(selection == timeframe ? AppTheme.accentOnFill : AppTheme.textSecondary)
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .contentShape(Rectangle())
                 }
+                // Without this macOS draws its own bordered button underneath, so
+                // unselected chips appeared as grey capsules.
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selection == timeframe ? [.isButton, .isSelected] : .isButton)
             }
         }
         .padding(4)

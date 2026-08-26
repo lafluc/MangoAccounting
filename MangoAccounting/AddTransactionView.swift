@@ -72,6 +72,20 @@ struct AddTransactionView: View {
     /// Suggestions are only offered while composing; an edit already has a title.
     private var showsSuggestions: Bool { transactionToEdit == nil }
 
+    /// Categories for the current type, plus whatever this transaction already
+    /// uses.
+    ///
+    /// A stored category that is no longer in the manager's list — renamed since,
+    /// or never registered — otherwise left the picker blank while the value was
+    /// still held and saved, which looked like data loss.
+    private var availableCategories: [String] {
+        let known = type == "Income"
+            ? categoryManager.incomeCategories
+            : categoryManager.expenseCategories
+        guard !category.isEmpty, !known.contains(category) else { return known }
+        return known + [category]
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -91,11 +105,6 @@ struct AddTransactionView: View {
             .padding(.horizontal)
             .padding(.top)
         }
-        // A safe-area inset is laid out outside the scrolling content, so the
-        // action bar keeps its height no matter how little room the sheet gets.
-        // Previously Save was a sibling of an unbounded ScrollView, so a short
-        // sheet clipped it away entirely and only the toolbar's Cancel survived.
-        .safeAreaInset(edge: .bottom, spacing: 0) { actionBar }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle(Text(LocalizedStringKey(navigationTitle)))
@@ -104,12 +113,13 @@ struct AddTransactionView: View {
                 Button("Cancel") { dismiss() }
                     .keyboardShortcut(.cancelAction)
             }
-            // Save also lives in the toolbar, which cannot be clipped at any
-            // window size, so the primary action is always reachable.
+            // The confirm action lives here rather than in the content. macOS
+            // renders it in the sheet's bottom bar, which cannot be clipped at any
+            // window size — the original bug was a Save button that could be.
             ToolbarItem(placement: .confirmationAction) {
                 Button(saveButtonTitle) { saveTransaction() }
                     .disabled(!canSave)
-                    .keyboardShortcut("s", modifiers: .command)
+                    .keyboardShortcut(.defaultAction)
             }
         }
         .sheet(isPresented: $showCategorySheet) {
@@ -167,19 +177,6 @@ struct AddTransactionView: View {
         } message: {
             Text(saveErrorMessage ?? "")
         }
-    }
-
-    private var actionBar: some View {
-        VStack(spacing: 0) {
-            Divider()
-            Button(saveButtonTitle) { saveTransaction() }
-                .buttonStyle(PillButtonStyle())
-                .disabled(!canSave)
-                .keyboardShortcut(.defaultAction)
-                .padding(.horizontal)
-                .padding(.vertical, 12)
-        }
-        .background(.bar)
     }
 
     private var saveButtonTitle: LocalizedStringKey {
@@ -301,11 +298,12 @@ struct AddTransactionView: View {
                 
                 HStack {
                     Picker("Category", selection: $category) {
-                         Text("Select a category").tag("")
-                        ForEach(type == "Income" ? categoryManager.incomeCategories : categoryManager.expenseCategories, id: \.self) {
-                            Text($0)
+                        Text("Select a category").tag("")
+                        ForEach(availableCategories, id: \.self) { name in
+                            Text(name).tag(name)
                         }
                     }
+                    .accessibilityLabel("Category")
                     Spacer()
                     Button { showCategorySheet = true } label: {
                         Image(systemName: "pencil.and.list.clipboard")

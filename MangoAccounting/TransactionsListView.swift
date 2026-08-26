@@ -137,6 +137,19 @@ struct TransactionsListView: View {
             }
             .searchable(text: $searchQuery, prompt: "Search by description or category")
             .navigationTitle("Transactions")
+            #if os(macOS)
+            // The list is the sidebar of a split view and at its default width
+            // every row truncated to an ellipsis.
+            .frame(minWidth: 340, idealWidth: 400)
+            #endif
+
+            // Detail placeholder. Without it the right-hand pane is simply blank
+            // on a wide window.
+            PlaceholderView(
+                systemImageName: "list.bullet.rectangle",
+                title: "No Transaction Selected",
+                subtitle: "Choose an entry to see its details and attachment."
+            )
             .toolbar { mainToolbar }
             .sheet(isPresented: $showAddSheet) {
                 NavigationStack {

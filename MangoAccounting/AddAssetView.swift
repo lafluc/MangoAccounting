@@ -216,28 +216,7 @@ struct AddAssetView: View {
                 .padding(24)
             }
 
-            VStack(spacing: 12) {
-                Button(assetToEdit == nil ? "Save Asset" : "Update Asset") { saveAsset() }
-                    .buttonStyle(PillButtonStyle())
-                    .disabled(
-                        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-                        originalPriceInput == nil ||
-                        depreciationRate == nil ||
-                        !hasUsableCurrency ||
-                        (selectedCurrency != "CHF" && exchangeRate <= 0)
-                    )
-
-                if assetToEdit != nil {
-                    Button("Delete Asset", role: .destructive) {
-                        showDeleteConfirmation = true
-                    }
-                    // A destructive action used to render as the same mango pill as
-                    // the primary Save button right above it.
-                    .buttonStyle(PillButtonStyle(role: .destructive))
-                }
-            }
-            .padding()
-            .background(AppTheme.background)
+            deleteSection
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppTheme.background.ignoresSafeArea())
@@ -245,6 +224,12 @@ struct AddAssetView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button(assetToEdit == nil ? "Save Asset" : "Update Asset") { saveAsset() }
+                    .disabled(!canSaveAsset)
+                    .keyboardShortcut(.defaultAction)
             }
         }
         .alert(
@@ -321,6 +306,31 @@ struct AddAssetView: View {
         } else {
             selectedAssetCategory = .custom
         }
+    }
+
+    /// Only the destructive action stays in the content. The confirm action sits in
+    /// the sheet's bottom bar, matching the transaction editor and the platform,
+    /// where the system keeps it visible at any window size.
+    @ViewBuilder
+    private var deleteSection: some View {
+        if assetToEdit != nil {
+            Button("Delete Asset", role: .destructive) {
+                showDeleteConfirmation = true
+            }
+            // A destructive action used to render as the same mango pill as the
+            // primary Save button right above it.
+            .buttonStyle(PillButtonStyle(role: .destructive))
+            .padding()
+            .background(AppTheme.background)
+        }
+    }
+
+    private var canSaveAsset: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && originalPriceInput != nil
+            && depreciationRate != nil
+            && hasUsableCurrency
+            && !(selectedCurrency != "CHF" && exchangeRate <= 0)
     }
 
     /// "OTHER" is the picker's sentinel for "let me type a code", not a currency.
