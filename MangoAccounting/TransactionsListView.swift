@@ -251,13 +251,13 @@ struct TransactionsListView: View {
             Menu {
                 Picker("Sort", selection: $selectedSortOption) {
                     ForEach(SortOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
+                        Text(LocalizedStringKey(option.rawValue)).tag(option)
                     }
                 }
                 Divider()
                 Picker("Filter by Type", selection: $selectedFilterOption) {
                     ForEach(FilterOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
+                        Text(LocalizedStringKey(option.rawValue)).tag(option)
                     }
                 }
                 Picker("Filter by Category", selection: $selectedCategory) {

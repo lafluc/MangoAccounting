@@ -1,3171 +1,3753 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "" : {
-
+  "sourceLanguage": "en",
+  "strings": {
+    "%.2f km": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%.2f km"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%.2f km"
+          }
+        }
+      }
+    },
+    "%@ • %.1f%%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ • %2$.1f%%"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ • %.1f%%"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ • %.1f%%"
+          }
+        }
+      }
+    },
+    "(%@ %@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "(%1$@ %2$@)"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(%@ %@)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(%@ %@)"
+          }
+        }
+      }
+    },
+    "01.01.%@ – 31.12.%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "01.01.%1$@ – 31.12.%2$@"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "01.01.%@ – 31.12.%@"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "01.01.%@ – 31.12.%@"
+          }
+        }
+      }
+    },
+    "Abschreibungen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abschreibungen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abschreibunga"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neidou"
+          }
+        }
+      }
+    },
+    "Add Item": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position hinzufügen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postn neidou"
+          }
+        }
+      }
+    },
+    "Address": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adress"
+          }
+        }
+      }
+    },
+    "Aktiven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktiven"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akdivn"
+          }
+        }
+      }
+    },
+    "All": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle"
+          }
+        }
+      }
+    },
+    "All Time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamter Zeitraum"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immer"
+          }
+        }
+      }
+    },
+    "All Types": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Typen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Typn"
+          }
+        }
+      }
+    },
+    "Amount": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrag"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrach"
+          }
+        }
+      }
+    },
+    "Amount (High-Low)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrag (Hoch-Niedrig)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrach (Houch-Nieda)"
+          }
+        }
+      }
+    },
+    "Amount (Low-High)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrag (Niedrig-Hoch)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrach (Nieda-Houch)"
+          }
+        }
+      }
+    },
+    "Amount: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrag: %@"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrach: %@"
+          }
+        }
+      }
+    },
+    "An invoice with the number \"%@\" already exists.\nDo you want to overwrite it?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Rechnung mit der Nummer \"%@\" existiert bereits.\nMöchtest du sie überschreiben?"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Rechnung mit der Nummer \"%@\" gibts scho.\nWillst'as überschreibn?"
+          }
+        }
+      }
+    },
+    "Anlagevermogen (Inventar)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anlagevermögen (Inventar)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anlagevermöchn (Inventar)"
+          }
+        }
+      }
+    },
+    "Annual Loss": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresverlust"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Johresverlust"
+          }
+        }
+      }
+    },
+    "Annual Profit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresgewinn"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Johresgwinn"
+          }
+        }
+      }
+    },
+    "Annual Report": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresbericht"
+          }
+        }
+      }
+    },
+    "Annual Report %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung %@"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresbericht %@"
+          }
+        }
+      }
+    },
+    "Appearance": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aussehen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie's ausschaut"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete this asset? This action cannot be undone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bist du sicher, dass du dieses Inventar löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bist da sicha, dassd des Zeich löschn willst? Des konnst ned widda zeruggholn."
+          }
+        }
+      }
+    },
+    "Are you sure?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bist Du dir sicher?"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bist da sicha?"
+          }
+        }
+      }
+    },
+    "Asset Class (ESTV)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anlageklasse (ESTV)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeich-Klass (ESTV)"
+          }
+        }
+      }
+    },
+    "Asset Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar-Details"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details vom Zeich"
+          }
+        }
+      }
     },
-    "(%@ %@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "(%1$@ %2$@)"
+    "Asset Name (e.g., RED Komodo)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar-Name (z.B. RED Komodo)"
           }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name vom Zeich (z.B. RED Komodo)"
+          }
+        }
+      }
+    },
+    "Assets": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gschäftszeich"
+          }
+        }
+      }
+    },
+    "Aufwand (Ausgaben)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwand (Ausgaben)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwand (Ausgabn)"
+          }
+        }
+      }
+    },
+    "BILANZ": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BILANZ"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BILANZ"
+          }
+        }
+      }
+    },
+    "BILANZ (per 31.12.%@)": {
+      "comment": "Balance sheet title with year",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BILANZ (per 31.12.%@)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BILANZ (zum 31.12.%@)"
+          }
+        }
+      }
+    },
+    "Back Up My Data and Start Fresh": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daten sichern und neu beginnen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datn sichern und neu anfanga"
+          }
         }
       }
     },
-    "%.2f km" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%.2f km"
+    "Balance Sheet Data (as of 31 December)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilanzdaten (Stichtag 31.12.)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%.2f km"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilanzdatn (Stichtag 31.12.)"
           }
         }
       }
     },
-    "%@ • %.1f%%" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ • %2$.1f%%"
+    "Betrag (CHF)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrag (CHF)"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betrach (CHF)"
           }
         }
       }
     },
-    "01.01.%@ – 31.12.%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "01.01.%1$@ – 31.12.%2$@"
+    "Bill Attachment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsanhang"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsanhang"
           }
         }
       }
     },
-    "Abschreibungen" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abschreibungen"
+    "Bill Photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsfoto"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abschreibunga"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsbildla"
           }
         }
       }
     },
-    "Add" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinzufügen"
+    "Business Assets": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschäftsinventar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neidou"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gschäftszeich"
           }
         }
       }
     },
-    "Add Item" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Position hinzufügen"
+    "CHF %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CHF %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Postn neidou"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CHF %@"
           }
         }
       }
     },
-    "Address" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adresse"
+    "Camera & Production Gear": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera- & Produktionsausrüstung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adress"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera- & Produktionszeich"
           }
         }
       }
     },
-    "Aktiven" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktiven"
+    "Cancel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Akdivn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechn"
           }
         }
       }
     },
-    "All" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle"
+    "Car Expenses": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fahrkosten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autokostn"
           }
         }
       }
     },
-    "All Time" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamter Zeitraum"
+    "Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Immer"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie"
           }
         }
       }
     },
-    "All Types" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Typen"
+    "Client Address": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empfängeradresse"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Typn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adress vom Empfänger"
           }
         }
       }
     },
-    "Amount" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrag"
+    "Client Information": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empfängerinformationen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Infos vom Empfänger"
           }
         }
       }
     },
-    "Amount (High-Low)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrag (Hoch-Niedrig)"
+    "Client Name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EmpfängerIn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrach (Houch-Nieda)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empfänger"
           }
         }
       }
     },
-    "Amount (Low-High)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrag (Niedrig-Hoch)"
+    "Close": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schliessen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrach (Nieda-Houch)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zumachn"
           }
         }
       }
     },
-    "Amount: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrag: %@"
+    "Code": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrach: %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kod"
           }
         }
       }
     },
-    "An invoice with the number \"%@\" already exists.\nDo you want to overwrite it?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eine Rechnung mit der Nummer \"%@\" existiert bereits.\nMöchtest du sie überschreiben?"
+    "Could Not Delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konnte nicht gelöscht werden"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A Rechnung mit der Nummer \"%@\" gibts scho.\nWillst'as überschreibn?"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hods ned glöscht"
           }
         }
       }
     },
-    "Anlagevermogen (Inventar)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlagevermögen (Inventar)"
+    "Could Not Rename": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konnte nicht umbenannt werden"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlagevermöchn (Inventar)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hods ned umbenannt"
           }
         }
       }
     },
-    "Annual Loss" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresverlust"
+    "Could Not Save": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konnte nicht gespeichert werden"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Johresverlust"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hods ned gspeichert"
           }
         }
       }
     },
-    "Annual Profit" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresgewinn"
+    "Currency": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Währung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Johresgwinn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Währung"
           }
         }
       }
     },
-    "Annual Report" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgsrechnung"
+    "Custom Rate": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigener Satz"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresbericht"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eichner Satz"
           }
         }
       }
     },
-    "Annual Report %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgsrechnung %@"
+    "Customize Tab Order": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reihenfolge anpassen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresbericht %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reihenfolge ändern"
           }
         }
       }
     },
-    "Appearance" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aussehen"
+    "Dashboard": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersicht"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wie's ausschaut"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersicht"
           }
         }
       }
     },
-    "Are you sure you want to delete this asset? This action cannot be undone." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist du sicher, dass du dieses Inventar löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+    "Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist da sicha, dassd des Zeich löschn willst? Des konnst ned widda zeruggholn."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum"
           }
         }
       }
     },
-    "Are you sure?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist Du dir sicher?"
+    "Degressive": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Degressiv"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist da sicha?"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Degressiv"
           }
         }
       }
     },
-    "Asset Class (ESTV)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlageklasse (ESTV)"
+    "Delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeich-Klass (ESTV)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschn"
           }
         }
       }
     },
-    "Asset Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar-Details"
+    "Delete Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar löschen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details vom Zeich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeich löschn"
           }
         }
       }
     },
-    "Asset Name (e.g., RED Komodo)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar-Name (z.B. RED Komodo)"
+    "Delete File": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datei Löschen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name vom Zeich (z.B. RED Komodo)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datei löschn"
           }
         }
       }
     },
-    "Assets" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar"
+    "Depreciation Settings": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abschreibungseinstellungen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gschäftszeich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abschreibungseistellunga"
           }
         }
       }
     },
-    "Aufwand" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand"
+    "Description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibung"
           }
         }
       }
     },
-    "Aufwand (Ausgaben)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand (Ausgaben)"
+    "Description (e.g., Lunch with client)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibung (z.B. Mittagessen mit Kunde)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand (Ausgabn)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibung (z.B. Mittachessn mitm Kundn)"
           }
         }
       }
     },
-    "Balance Sheet Data (Stichtag 31.12.)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bilanzdaten (Stichtag 31.12.)"
+    "Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bilanzdatn (Stichtag 31.12.)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
           }
         }
       }
     },
-    "Betrag (CHF)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrag (CHF)"
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betrach (CHF)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertich"
           }
         }
       }
     },
-    "BILANZ" : {
-
+    "Due Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fälligkeitsdatum"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fällichkeitsdatum"
+          }
+        }
+      }
     },
-    "BILANZ (per 31.12.%@)" : {
-      "comment" : "Balance sheet title with year",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "BILANZ (per 31.12.%@)"
+    "Duplicate": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplizieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "BILANZ (zum 31.12.%@)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dupliziern"
           }
         }
       }
     },
-    "Bill Attachment" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsanhang"
+    "Duplicate as New Invoice": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als neue Rechnung duplizieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsanhang"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als neue Rechnung dupliziern"
           }
         }
       }
     },
-    "Bill Photo" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsfoto"
+    "ERFOLGSRECHNUNG": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ERFOLGSRECHNUNG"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsbildla"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ERFOLGSRECHNUNG"
           }
         }
       }
     },
-    "Business Assets" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geschäftsinventar"
+    "Edit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gschäftszeich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeitn"
           }
         }
       }
     },
-    "Cancel" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abbrechen"
+    "Edit Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar bearbeiten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abbrechn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeich bearbeitn"
           }
         }
       }
     },
-    "Car Expenses" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fahrkosten"
+    "Edit Invoice": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung bearbeiten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autokostn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung bearbeitn"
           }
         }
       }
     },
-    "Category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie"
+    "Edit Transaction": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eintrag bearbeiten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eintrach bearbeitn"
           }
         }
       }
     },
-    "CHF %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CHF %@"
+    "Editable": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeitbar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CHF %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeitbar"
           }
         }
       }
     },
-    "Client Address" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empfängeradresse"
+    "Eigenkapital": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigenkapital"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adress vom Empfänger"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aichngapidal"
           }
         }
       }
     },
-    "Client Information" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empfängerinformationen"
+    "English": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Englisch"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Infos vom Empfänger"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Englisch"
           }
         }
       }
     },
-    "Client Name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmpfängerIn"
+    "Erfolgsrechnung %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empfänger"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresbericht %@"
           }
         }
       }
     },
-    "Close" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schliessen"
+    "Ertrag (Einnahmen)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ertrag (Einnahmen)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zumachn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ertrach (Einnahma)"
           }
         }
       }
     },
-    "Code" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Code"
+    "Expense": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgabe"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kod"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgabe"
           }
         }
       }
     },
-    "Currency" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Währung"
+    "Expense Categories": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgabenkategorien"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Währung"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgabn-Kategorien"
           }
         }
       }
     },
-    "Customize Tab Order" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reihenfolge anpassen"
+    "Expenses": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwand"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reihenfolge ändern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwand"
           }
         }
       }
     },
-    "Dashboard" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übersicht"
+    "Export PDF to Folder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF in Ordner exportieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übersicht"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF in Ordner exportiern"
           }
         }
       }
     },
-    "Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datum"
+    "Fahrtenbuch": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fahrtenbuch"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datum"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fahrtenbuch"
           }
         }
       }
     },
-    "Degressive" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Degressiv"
+    "Filter by Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Kategorie filtern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Degressiv"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch Kategorie filtern"
           }
         }
       }
     },
-    "Delete" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Löschen"
+    "Filter by Type": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Typ filtern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Löschn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch Typ filtern"
           }
         }
       }
     },
-    "Delete Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar löschen"
+    "Fiscal Year:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschäftsjahr:"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeich löschn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gschäftsjohr:"
           }
         }
       }
     },
-    "Delete File" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datei Löschen"
+    "Flussige Mittel (Bank/Kasse)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flüssige Mittel (Bank/Kasse)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datei löschn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flüssiche Middl (Bank/Kassn)"
           }
         }
       }
     },
-    "Depreciation Settings" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abschreibungseinstellungen"
+    "Fremdkapital (Schulden)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fremdkapital (Schulden)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abschreibungseistellunga"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fremdkapidal (Schuldn)"
           }
         }
       }
     },
-    "Description" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung"
+    "Generate & Preview PDF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF generieren & Vorschau"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF machn und anschaun"
           }
         }
       }
     },
-    "Description (e.g., Lunch with client)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung (z.B. Mittagessen mit Kunde)"
+    "Generate PDF Statement": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung als PDF"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung (z.B. Mittachessn mitm Kundn)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresbericht als PDF"
           }
         }
       }
     },
-    "Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details"
+    "German": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
           }
         }
       }
     },
-    "Done" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertig"
+    "IBAN (CH...)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN (CH...)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN (CH...)"
           }
         }
       }
     },
-    "Driver's Log" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fahrtenbuch"
+    "IBAN (CH…)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN (CH...)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fahrtenbuch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN (CH...)"
           }
         }
       }
     },
-    "Due Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fälligkeitsdatum"
+    "IBAN: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN: %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fällichkeitsdatum"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IBAN: %@"
           }
         }
       }
     },
-    "e.g. 40" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "z.B. 40"
+    "IT & Computer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IT & Computer"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "z.B. 40"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IT & Computer"
           }
         }
       }
     },
-    "Edit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearbeiten"
+    "Income": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einnahme"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearbeitn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einnahme"
           }
         }
       }
     },
-    "Edit Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar bearbeiten"
+    "Income Categories": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einnahmenkategorien"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeich bearbeitn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einnahm-Kategorien"
           }
         }
       }
     },
-    "Eigenkapital" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eigenkapital"
+    "Income Statement %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aichngapidal"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgsrechnung %@"
           }
         }
       }
     },
-    "English" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Englisch"
+    "Invoice": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Englisch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung"
           }
         }
       }
     },
-    "ERFOLGSRECHNUNG" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ERFOLGSRECHNUNG"
+    "Invoice %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ERFOLGSRECHNUNG"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung %@"
           }
         }
       }
     },
-    "Erfolgsrechnung %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgsrechnung %@"
+    "Invoice Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsdatum"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresbericht %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsdatum"
           }
         }
       }
     },
-    "Ertrag" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrag"
+    "Invoice Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsdetails"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsdetails"
           }
         }
       }
     },
-    "Ertrag (Einnahmen)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrag (Einnahmen)"
+    "Invoice Number": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsnummer"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrach (Einnahma)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsnummer"
           }
         }
       }
     },
-    "Expense" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgabe"
+    "Invoice Number Exists": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsnummer existiert"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgabe"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnungsnummer gibts scho"
           }
         }
       }
     },
-    "Expense Categories" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgabenkategorien"
+    "Invoice Saved": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung gespeichert"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgabn-Kategorien"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechnung gspeichert"
           }
         }
       }
     },
-    "Expenses" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand"
+    "Jahresgewinn": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresgewinn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufwand"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Johresgwinn"
           }
         }
       }
     },
-    "Export PDF to Folder" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF in Ordner exportieren"
+    "Jahresverlust": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahresverlust"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF in Ordner exportiern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Johresverlust"
           }
         }
       }
     },
-    "Fahrtenbuch" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fahrtenbuch"
+    "Kilometers": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilometer"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fahrtenbuch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilomeda"
           }
         }
       }
     },
-    "Filter by Category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach Kategorie filtern"
+    "Language": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch Kategorie filtern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprach"
           }
         }
       }
     },
-    "Filter by Type" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach Typ filtern"
+    "Last 30 Days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte 30 Tage"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch Typ filtern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letztn 30 Tach"
           }
         }
       }
     },
-    "Fiscal Year:" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geschäftsjahr:"
+    "Last 90 Days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte 90 Tage"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gschäftsjohr:"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letztn 90 Tach"
           }
         }
       }
     },
-    "Flussige Mittel (Bank/Kasse)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flüssige Mittel (Bank/Kasse)"
+    "Liabilities (debts) in CHF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fremdkapital (Schulden) in CHF"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flüssiche Middl (Bank/Kassn)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fremdkapital (Schuldn) in CHF"
           }
         }
       }
     },
-    "Flussige Mittel (Bank/Kasse) in CHF" : {
-
+    "Line Items": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Positionen"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postn"
+          }
+        }
+      }
     },
-    "Fremdkapital (Schulden)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fremdkapital (Schulden)"
+    "Linear": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linear"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fremdkapidal (Schuldn)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linear"
           }
         }
       }
     },
-    "Fremdkapital (Schulden) in CHF" : {
-
+    "Linear Depreciation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lineare Abschreibung"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lineare Abschreibung"
+          }
+        }
+      }
     },
-    "from January 1 to December 31, %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "vom 1. Januar bis 31. Dezember %@"
+    "Liquid assets (bank/cash) in CHF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flüssige Mittel (Bank/Kasse) in CHF"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "vom 1. Januar bis 31. Dezember %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flüssige Mittel (Bank/Kass) in CHF"
           }
         }
       }
     },
-    "Generate & Preview PDF" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF generieren & Vorschau"
+    "Manage Categories": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorien verwalten"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF machn und anschaun"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorien verwalddn"
           }
         }
       }
     },
-    "Generate PDF Statement" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgsrechnung als PDF"
+    "Message to Client": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachricht an EmpfängerIn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresbericht als PDF"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachricht an Empfänger"
           }
         }
       }
     },
-    "Generiert durch MangoAccounting" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Generiert durch MangoAccounting"
+    "N/A": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "k. A."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gmacht mit MangoAccounting"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "k. A."
           }
         }
       }
     },
-    "German" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deutsch"
+    "Name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deutsch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
           }
         }
       }
     },
-    "IBAN (CH...)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN (CH...)"
+    "Net Profit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nettogewinn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN (CH...)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reingewinn"
           }
         }
       }
     },
-    "IBAN (CH…)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN (CH...)"
+    "Net Profit Trend": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nettogewinntrend"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN (CH...)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewinn-Trend"
           }
         }
       }
     },
-    "IBAN: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN: %@"
+    "New Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Inventar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IBAN: %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neies Zeich"
           }
         }
       }
     },
-    "Income" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einnahme"
+    "New Category Name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Kategoriename"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einnahme"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neier Kategorie-Nam"
           }
         }
       }
     },
-    "Income Categories" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einnahmenkategorien"
+    "New Expense Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neue Ausgabenkategorie"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einnahm-Kategorien"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neie Ausgabn-Kategorie"
           }
         }
       }
     },
-    "Invoice %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnung %@"
+    "New Income Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neue Einnahmenkategorie"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnung %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neie Einnahm-Kategorie"
           }
         }
       }
     },
-    "Invoice Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsdatum"
+    "New Invoice": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neue Rechnung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsdatum"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neie Rechnung"
           }
         }
       }
     },
-    "Invoice Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsdetails"
+    "New Transaction": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Eintrag"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsdetails"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Eintrach"
           }
         }
       }
     },
-    "Invoice Number" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsnummer"
+    "Newest First": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neueste zuerst"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsnummer"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neiesde zerscht"
           }
         }
       }
     },
-    "Invoice Number Exists" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsnummer existiert"
+    "No Assets Yet": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch kein Inventar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnungsnummer gibts scho"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nu ka Zeich do"
           }
         }
       }
     },
-    "Invoice Saved" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnung gespeichert"
+    "No Bill Photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Rechnungsfoto"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechnung gspeichert"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ka Rechnungsbildla"
           }
         }
       }
     },
-    "Jahresgewinn" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresgewinn"
+    "No Saved Files": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine gespeicherten Dateien"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Johresgwinn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kane gspeicherdn Datein"
           }
         }
       }
     },
-    "Jahresverlust" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahresverlust"
+    "No Transactions Yet": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Transaktionen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Johresverlust"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nu kane Eiträch"
           }
         }
       }
     },
-    "Kilometers" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kilometer"
+    "No attachment selected.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Anhang ausgewählt."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kilomeda"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ka Anhang ausgewählt."
           }
         }
       }
     },
-    "Language" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprache"
+    "No transactions in this period.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Transaktionen in diesem Zeitraum."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kane Eiträch in derra Zeit."
           }
         }
       }
     },
-    "Last 30 Days" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letzte 30 Tage"
+    "No transactions in this year, type or category. Try a different fiscal year or clear the filters.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Einträge in diesem Jahr, Typ oder dieser Kategorie. Wähle ein anderes Geschäftsjahr oder setze die Filter zurück."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letztn 30 Tach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kane Einträch in dem Johr, Typ oder der Kategorie. Nimm a anders Gschäftsjohr oder mach die Filter weg."
           }
         }
       }
     },
-    "Last 90 Days" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letzte 90 Tage"
+    "Not enough data to display a trend.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht genügend Daten für einen Trend."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letztn 90 Tach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ned gnuch Daten für an Trend."
           }
         }
       }
     },
-    "Line Items" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Positionen"
+    "Not subject to VAT according to Art. 10 Abs. 2 MWSTG": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht mehrwertsteuerpflichtig gemäss Art. 10 Abs. 2 MWSTG."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Postn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ned steuerpflichtich noch Art. 10 Abs. 2 MWSTG."
           }
         }
       }
     },
-    "Linear" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linear"
+    "Note: ESTV standard degressive rates are 40% for IT & Vehicles, 30% for Camera Gear, and 25% for Furniture. Linear rates are exactly half.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinweis: Die ESTV Standard-Degressivsätze sind 40% für IT & Fahrzeuge, 30% für Kameraausrüstung und 25% für Möbel. Lineare Sätze sind genau die Hälfte."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linear"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinweis: D'ESTV erlaubt meistns 40% degressiv für IT & Autos, 30% für Kameras und 25% für Möbl. Linear is genau d'Hälftn."
           }
         }
       }
     },
-    "Linear Depreciation" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lineare Abschreibung"
+    "Nothing Matches These Filters": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Treffer für diese Filter"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lineare Abschreibung"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nix gfundn mit den Filtern"
           }
         }
       }
     },
-    "Manage Categories" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorien verwalten"
+    "OK": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorien verwalddn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bassd"
           }
         }
       }
     },
-    "Message to Client" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nachricht an EmpfängerIn"
+    "Oberfränkisch": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oberfränkisch"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nachricht an Empfänger"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oberfränkisch"
           }
         }
       }
     },
-    "Name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name"
+    "Office Furniture": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Büromobiliar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Büromöbl"
           }
         }
       }
     },
-    "Net Profit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nettogewinn"
+    "Oldest First": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Älteste zuerst"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reingewinn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Äldesde zerscht"
           }
         }
       }
     },
-    "Net Profit Trend" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nettogewinntrend"
+    "Other...": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andere..."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gewinn-Trend"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andere..."
           }
         }
       }
     },
-    "New Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neues Inventar"
+    "Overwrite": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Überschreiben"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neies Zeich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Überschreibn"
           }
         }
       }
     },
-    "New Category Name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuer Kategoriename"
+    "PDF Document": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF-Dokument"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neier Kategorie-Nam"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF-Dokument"
           }
         }
       }
     },
-    "New Expense Category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Ausgabenkategorie"
+    "PDF only": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur PDF"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neie Ausgabn-Kategorie"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur PDF"
           }
         }
       }
     },
-    "New Income Category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Einnahmenkategorie"
+    "Page %d of %d": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite %d von %d"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neie Einnahm-Kategorie"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seitn %d vo %d"
           }
         }
       }
     },
-    "New Invoice" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Rechnung"
+    "Passiven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passiven"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neie Rechnung"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passivn"
           }
         }
       }
     },
-    "New Transaction" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuer Eintrag"
+    "Payable to": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahlbar an"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuer Eintrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahlbar an"
           }
         }
       }
     },
-    "Newest First" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neueste zuerst"
+    "Pick another entry from the list.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle einen anderen Eintrag aus der Liste."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neiesde zerscht"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimm an andern Eintrach aus der Listn."
           }
         }
       }
     },
-    "No Assets Yet" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch kein Inventar"
+    "Preview: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorschau: %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nu ka Zeich do"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorschau: %@"
           }
         }
       }
     },
-    "No attachment selected." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Anhang ausgewählt."
+    "Profit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewinn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ka Anhang ausgewählt."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gwinn"
           }
         }
       }
     },
-    "No Bill Photo" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Rechnungsfoto"
+    "Purchase Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaufdatum"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ka Rechnungsbildla"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaufdatum"
           }
         }
       }
     },
-    "No Saved Files" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine gespeicherten Dateien"
+    "Purchase Price": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaufpreis"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kane gspeicherdn Datein"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaufpreis"
           }
         }
       }
     },
-    "No transactions in this period." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Transaktionen in diesem Zeitraum."
+    "QR code could not be generated.\nPlease check IBAN and address details.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-Code konnte nicht generiert werden.\nBitte IBAN und Adressdetails prüfen."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kane Eiträch in derra Zeit."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-Code konnt ned gmacht werdn.\nPrüf amol d'IBAN und d'Adress."
           }
         }
       }
     },
-    "No Transactions Yet" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch keine Transaktionen"
+    "Rate": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurs"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nu kane Eiträch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurs"
           }
         }
       }
     },
-    "Not enough data to display a trend." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht genügend Daten für einen Trend."
+    "Rate (1 %@ = ? CHF)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurs (1 %@ = ? CHF)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ned gnuch Daten für an Trend."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurs (1 %@ = ? CHF)"
           }
         }
       }
     },
-    "Not subject to VAT according to Art. 10 Abs. 2 MWSTG" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht mehrwertsteuerpflichtig gemäss Art. 10 Abs. 2 MWSTG."
+    "Recent Transactions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte Transaktionen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ned steuerpflichtich noch Art. 10 Abs. 2 MWSTG."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte Eiträch"
           }
         }
       }
     },
-    "Note: ESTV standard degressive rates are 40% for IT & Vehicles, 30% for Camera Gear, and 25% for Furniture. Linear rates are exactly half." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinweis: Die ESTV Standard-Degressivsätze sind 40% für IT & Fahrzeuge, 30% für Kameraausrüstung und 25% für Möbel. Lineare Sätze sind genau die Hälfte."
+    "Reference: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referenz: %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinweis: D'ESTV erlaubt meistns 40% degressiv für IT & Autos, 30% für Kameras und 25% für Möbl. Linear is genau d'Hälftn."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referenz: %@"
           }
         }
       }
     },
-    "Note: Swiss ESTV generally allows 40% Degressive or 20% Linear for IT & Camera Equipment." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinweis: Die ESTV erlaubt generell 40% degressiv oder 20% linear für IT- & Kameraausrüstung."
+    "Remove this line": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Position entfernen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinweis: D'ESTV erlaubt meistns 40% degressiv oder 20% linear für IT- & Kameras."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Postn wegmacha"
           }
         }
       }
     },
-    "Oberfränkisch" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oberfränkisch"
+    "Rename Category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie umbenennen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oberfränkisch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie umbenenna"
           }
         }
       }
     },
-    "OK" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+    "Reopen this invoice and change it": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Rechnung erneut öffnen und ändern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bassd"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Rechnung nochmal aufmacha und ändern"
           }
         }
       }
     },
-    "Oldest First" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Älteste zuerst"
+    "Report Saved": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bericht gespeichert"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Äldesde zerscht"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bericht gspeichert"
           }
         }
       }
     },
-    "Other..." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Andere..."
+    "Revenue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ertrag"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Andere..."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ertrach"
           }
         }
       }
     },
-    "Overwrite" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Überschreiben"
+    "Save": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Überschreibn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern"
           }
         }
       }
     },
-    "Passiven" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passiven"
+    "Save As...": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern unter..."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passivn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern als..."
           }
         }
       }
     },
-    "Payable to" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zahlbar an"
+    "Save Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar speichern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zahlbar an"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeich speichern"
           }
         }
       }
     },
-    "Preview: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorschau: %@"
+    "Save Changes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Änderungen speichern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorschau: %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Änderunga speichern"
           }
         }
       }
     },
-    "Profit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gewinn"
+    "Save to Archive": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Archiv speichern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gwinn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Archiv speichan"
           }
         }
       }
     },
-    "Purchase Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaufdatum"
+    "Saved": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeichert"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaufdatum"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gspeichert"
           }
         }
       }
     },
-    "Purchase Price" : {
-
+    "Saved Files": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherte Dateien"
+          }
+        },
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gspeicherde Datein"
+          }
+        }
+      }
     },
-    "Purchase Price (CHF)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaufpreis (CHF)"
+    "Saved invoices and reports will appear here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherte Rechnungen und Berichte erscheinen hier."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaufpreis (CHF)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gspeicherde Rechnunga und Berichta senn dann do."
           }
         }
       }
     },
-    "QR code could not be generated.\nPlease check IBAN and address details." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "QR-Code konnte nicht generiert werden.\nBitte IBAN und Adressdetails prüfen."
+    "Search by description or category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suche nach Beschreibung oder Kategorie"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "QR-Code konnt ned gmacht werdn.\nPrüf amol d'IBAN und d'Adress."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Such noch Beschreibung oder Kategorie"
           }
         }
       }
     },
-    "Rate" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurs"
+    "Search by name or client": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suche nach Name oder Kunde"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurs"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Such noch Nam' oder Kundn"
           }
         }
       }
     },
-    "Rate (1 %@ = ? CHF)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurs (1 %@ = ? CHF)"
+    "Select PDF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF auswählen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurs (1 %@ = ? CHF)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF auswähln"
           }
         }
       }
     },
-    "Recent Transactions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letzte Transaktionen"
+    "Select Photo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto wählen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letzte Eiträch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildla auswähln"
           }
         }
       }
     },
-    "Reference: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Referenz: %@"
+    "Select a category": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie auswählen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Referenz: %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategorie auswähln"
           }
         }
       }
     },
-    "Rename Category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie umbenennen"
+    "Select a file from the list to see a preview.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle eine Datei aus der Liste für eine Vorschau."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie umbenenna"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Such a Datei aus der Listn für a Vorschau aus."
           }
         }
       }
     },
-    "Report Saved" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bericht gespeichert"
+    "Settings": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bericht gspeichert"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eistellunga"
           }
         }
       }
     },
-    "Revenue" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrag"
+    "Show Backup in Finder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sicherung im Finder zeigen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ertrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sicherung im Finder zeing"
           }
         }
       }
     },
-    "Save" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichern"
+    "Sort": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortiern"
           }
         }
       }
     },
-    "Save As..." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichern unter..."
+    "Sort & Filter": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortieren & Filtern"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichern als..."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sortiern & Filtern"
           }
         }
       }
     },
-    "Save Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar speichern"
+    "Summary for %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfassung für %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeich speichern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zammfassung für %@"
           }
         }
       }
     },
-    "Save to Archive" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Im Archiv speichern"
+    "Summary for %d": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfassung für %d"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Im Archiv speichan"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zammfassung für %d"
           }
         }
       }
     },
-    "Saved" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gespeichert"
+    "Tap the ‘+’ button to add your first income or expense entry for this year.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drücke auf den ‘+’ Knopf, um den ersten Eintrag für dieses Jahr zu erstellen."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gspeichert"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drück auf den ‘+’ Knopf für dein erschtn Eintrach für des Johr."
           }
         }
       }
     },
-    "Saved Files" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gespeicherte Dateien"
+    "The PDF could not be created. Please try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das PDF konnte nicht erstellt werden. Bitte versuche es erneut."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gspeicherde Datein"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Des PDF hods ned hikriecht. Probier's nochmal."
           }
         }
       }
     },
-    "Saved invoices and reports will appear here." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gespeicherte Rechnungen und Berichte erscheinen hier."
+    "The database file could not be read. This is often temporary — a full disk, a file still in use, or missing permissions. Nothing has been changed on disk.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Datenbankdatei konnte nicht gelesen werden. Das ist oft vorübergehend – volle Festplatte, Datei noch in Benutzung oder fehlende Rechte. Auf der Festplatte wurde nichts verändert."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gspeicherde Rechnunga und Berichta senn dann do."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D'Datnbankdatei hods ned lesn könna. Des is oft bloß vorübergehend – volle Plattn, Datei nu in Benutzung oder fehlende Rechte. Auf der Plattn is nix verändert wordn."
           }
         }
       }
     },
-    "Search by description or category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suche nach Beschreibung oder Kategorie"
+    "The database is available again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Datenbank ist wieder verfügbar."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Such noch Beschreibung oder Kategorie"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D'Datnbank is widda do."
           }
         }
       }
     },
-    "Search by name or client" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suche nach Name oder Kunde"
+    "The database was created by a version of MangoAccounting that this version cannot read. Quitting and reopening sometimes clears this. Nothing has been changed on disk.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Datenbank wurde mit einer Version von MangoAccounting erstellt, die diese Version nicht lesen kann. Ein Neustart hilft manchmal. Auf der Festplatte wurde nichts verändert."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Such noch Nam' oder Kundn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D'Datnbank is mit ana Version vo MangoAccounting gmacht wordn, die die do ned lesn konn. A Neustart hilft manchmal. Auf der Plattn is nix verändert wordn."
           }
         }
       }
     },
-    "Select a category" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie auswählen"
+    "This file (%@) will be permanently deleted.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei (%@) wird permanent gelöscht."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie auswähln"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Datei (%@) wird für immer glöscht."
           }
         }
       }
     },
-    "Select a file from the list to see a preview." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle eine Datei aus der Liste für eine Vorschau."
+    "This invoice was saved before editing was supported, so its details are not stored. Use \"Duplicate as New Invoice\" to re-enter them once.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Rechnung wurde gespeichert, bevor Bearbeiten möglich war; ihre Details sind nicht hinterlegt. Nutze „Als neue Rechnung duplizieren“, um sie einmal neu zu erfassen."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Such a Datei aus der Listn für a Vorschau aus."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Rechnung is gspeichert wordn, bevors Bearbeitn ganga is – d'Details sinn ned hinterlegt. Nimm „Als neue Rechnung dupliziern“ und gib's amol neu ei."
           }
         }
       }
     },
-    "Select PDF" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF auswählen"
+    "This transaction will be permanently deleted.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Transaktion wird permanent gelöscht."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PDF auswähln"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Eintrach wird für immer glöscht."
           }
         }
       }
     },
-    "Select Photo" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Foto wählen"
+    "This will also update all existing transactions that use this category.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dies aktualisiert auch alle bestehenden Transaktionen, die diese Kategorie verwenden."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bildla auswähln"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Des ändert aa alle aldn Eiträch, die wo die Kategorie hom."
           }
         }
       }
     },
-    "Settings" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einstellungen"
+    "Timeframe": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitraum"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eistellunga"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitraum"
           }
         }
       }
     },
-    "Sort" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortieren"
+    "Total": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortiern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt"
           }
         }
       }
     },
-    "Sort & Filter" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortieren & Filtern"
+    "Total Aktiven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Aktiven"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortiern & Filtern"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Akdivn"
           }
         }
       }
     },
-    "Summary for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusammenfassung für %@"
+    "Total Amount": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamtbetrag"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zammfassung für %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamtbetrach"
           }
         }
       }
     },
-    "Summary for %d" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusammenfassung für %d"
+    "Total Aufwand": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Aufwand"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zammfassung für %d"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt Aufwand"
           }
         }
       }
     },
-    "Tap the ‘+’ button to add your first income or expense entry for this year." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drücke auf den ‘+’ Knopf, um den ersten Eintrag für dieses Jahr zu erstellen."
+    "Total Ertrag": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Ertrag"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drück auf den ‘+’ Knopf für dein erschtn Eintrach für des Johr."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt Ertrach"
           }
         }
       }
     },
-    "Tap the ‘+’ button to add your first income or expense entry." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drücke auf den ‘+’ Knopf, um den ersten Eintrag zu erstellen."
+    "Total Expense": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Ausgaben"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drück auf den ‘+’ Knopf für dein erschtn Eintrach."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamte Ausgabn"
           }
         }
       }
     },
-    "This file (%@) will be permanently deleted." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Datei (%@) wird permanent gelöscht."
+    "Total Expenses": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Aufwand"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Datei (%@) wird für immer glöscht."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt Aufwand"
           }
         }
       }
     },
-    "This transaction will be permanently deleted." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Transaktion wird permanent gelöscht."
+    "Total Income": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Einnahmen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Eintrach wird für immer glöscht."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamte Einnahma"
           }
         }
       }
     },
-    "This will also update all existing transactions that use this category." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies aktualisiert auch alle bestehenden Transaktionen, die diese Kategorie verwenden."
+    "Total Kilometers Driven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total gefahrene Kilometer"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Des ändert aa alle aldn Eiträch, die wo die Kategorie hom."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt gfahrne Kilomeda"
           }
         }
       }
     },
-    "Timeframe" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitraum"
+    "Total Passiven": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Passiven"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitraum"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Passivn"
           }
         }
       }
     },
-    "Total" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total"
+    "Total Revenue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Ertrag"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt Ertrach"
           }
         }
       }
     },
-    "Total Aktiven" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Aktiven"
+    "Total gefahrene Kilometer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total gefahrene Kilometer"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Akdivn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt gfahrne Kilomeda"
           }
         }
       }
     },
-    "Total Amount" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamtbetrag"
+    "Total in CHF:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total in CHF:"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamtbetrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gsamt in CHF:"
           }
         }
       }
     },
-    "Total Aufwand" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Aufwand"
+    "Track your cameras, lenses, and IT equipment for automatic depreciation.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwalte deine Kameras, Objektive und IT-Ausrüstung für automatische Abschreibungen."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt Aufwand"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behalt dei Kameras, Objektive und IT im Blick für automatische Abschreibunga."
           }
         }
       }
     },
-    "Total Ertrag" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Ertrag"
+    "Transaction Deleted": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eintrag gelöscht"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt Ertrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eintrach glöscht"
           }
         }
       }
     },
-    "Total Expense" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Ausgaben"
+    "Transaction Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transaktionsdetails"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamte Ausgabn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details vom Eintrach"
           }
         }
       }
     },
-    "Total Expenses" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Aufwand"
+    "Transactions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transaktionen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt Aufwand"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eiträch"
           }
         }
       }
     },
-    "Total gefahrene Kilometer" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total gefahrene Kilometer"
+    "Try Again": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt gfahrne Kilomeda"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nochmal probiern"
           }
         }
       }
     },
-    "Total in CHF:" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total in CHF:"
+    "Type": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Typ"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt in CHF:"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Typ"
           }
         }
       }
     },
-    "Total Income" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Einnahmen"
+    "UID (CHE-...)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "UID (CHE-...)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamte Einnahma"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "UID (CHE-...)"
           }
         }
       }
     },
-    "Total Kilometers Driven" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total gefahrene Kilometer"
+    "UID: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "UID: %@"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt gfahrne Kilomeda"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "UID: %@"
           }
         }
       }
     },
-    "Total Passiven" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Passiven"
+    "Uncategorized": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Kategorie"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Passivn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Kategorie"
           }
         }
       }
     },
-    "Total Revenue" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total Ertrag"
+    "Unknown Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unbekanntes Inventar"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gsamt Ertrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unbekannts Zeich"
           }
         }
       }
     },
-    "Track your cameras, lenses, and IT equipment for automatic depreciation." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verwalte deine Kameras, Objektive und IT-Ausrüstung für automatische Abschreibungen."
+    "Update": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualisieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behalt dei Kameras, Objektive und IT im Blick für automatische Abschreibunga."
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualisiern"
           }
         }
       }
     },
-    "Transaction Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transaktionsdetails"
+    "Update Asset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inventar aktualisieren"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details vom Eintrach"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeich updatn"
           }
         }
       }
     },
-    "Transactions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transaktionen"
+    "Use the ‘+’ button to add your first income or expense entry for this year.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutze den ‘+’ Knopf, um den ersten Eintrag für dieses Jahr zu erstellen."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eiträch"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimm den ‘+’ Knopf für dein erschtn Eintrach in dem Johr."
           }
         }
       }
     },
-    "Type" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Typ"
+    "Use this title and fill in its usual type, category and currency": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diesen Titel übernehmen und Typ, Kategorie und Währung wie üblich ausfüllen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Typ"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den Titl nehma und Typ, Kategorie und Währung wie üblich neidou"
           }
         }
       }
     },
-    "UID (CHE-...)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UID (CHE-...)"
+    "VAT Exemption": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mehrwertsteuerbefreiung"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UID (CHE-...)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steuerbefreiung"
           }
         }
       }
     },
-    "UID: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UID: %@"
+    "Vehicles": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fahrzeuge"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UID: %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fahrzeuch"
           }
         }
       }
     },
-    "Unknown Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unbekanntes Inventar"
+    "Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahr"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unbekannts Zeich"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Johr"
           }
         }
       }
     },
-    "Update Asset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inventar aktualisieren"
+    "Year to Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seit Jahresbeginn"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeich updatn"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seit Johresanfang"
           }
         }
       }
     },
-    "VAT Exemption" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mehrwertsteuerbefreiung"
+    "Yearly Rate (%)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jährliche Rate (%)"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Steuerbefreiung"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jährliche Rate (%)"
           }
         }
       }
     },
-    "vom 1. Januar bis 31. Dezember %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "vom 1. Januar bis 31. Dezember %@"
+    "Your Information": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Informationen"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "vom 1. Januar bis 31. Dezember %@"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Infos"
           }
         }
       }
     },
-    "Year" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jahr"
+    "Your data could not be opened": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Daten konnten nicht geöffnet werden"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Johr"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Datn hods ned aufmachn könna"
           }
         }
       }
     },
-    "Year to Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seit Jahresbeginn"
+    "Your existing database is renamed, never deleted. You can send it to support or restore it later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine bestehende Datenbank wird umbenannt, nie gelöscht. Du kannst sie später wiederherstellen oder einsenden."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seit Johresanfang"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dei bestehende Datnbank wird bloß umbenannt, nie glöscht. Du konnst se später widda hulln."
           }
         }
       }
     },
-    "Yearly Rate (%)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jährliche Rate (%)"
+    "Your previous database was kept as a backup.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine bisherige Datenbank wurde als Sicherung behalten."
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jährliche Rate (%)"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dei alte Datnbank is als Sicherung dablieebn."
           }
         }
       }
     },
-    "Your Information" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deine Informationen"
+    "e.g. 40": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z.B. 40"
           }
         },
-        "frk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deine Infos"
+        "frk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z.B. 40"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

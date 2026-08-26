@@ -88,11 +88,11 @@ struct AnnualReportView: View {
                             .font(AppTheme.titleFont)
                             .foregroundColor(AppTheme.textPrimary)
 
-                        ReportCategoryList(title: "Ertrag", items: report.incomeByCategory)
-                        ReportTotalRow(label: "Total Ertrag", value: report.totalIncome)
+                        ReportCategoryList(title: "Revenue", items: report.incomeByCategory)
+                        ReportTotalRow(label: "Total Revenue", value: report.totalIncome)
 
-                        ReportCategoryList(title: "Aufwand", items: report.expensesByCategory)
-                        ReportTotalRow(label: "Total Aufwand", value: report.totalExpenses)
+                        ReportCategoryList(title: "Expenses", items: report.expensesByCategory)
+                        ReportTotalRow(label: "Total Expenses", value: report.totalExpenses)
 
                         if report.totalCarKilometers > 0 {
                             ReportTotalRow(label: "Total Kilometers Driven", value: report.totalCarKilometers, isCurrency: false)
@@ -100,10 +100,10 @@ struct AnnualReportView: View {
 
                         Divider().background(AppTheme.textSecondary)
 
-                        ReportTotalRow(label: report.netProfit >= 0 ? "Jahresgewinn" : "Jahresverlust", value: report.netProfit, font: .title3.bold())
+                        ReportTotalRow(label: report.netProfit >= 0 ? "Annual Profit" : "Annual Loss", value: report.netProfit, font: .title3.bold())
                     }
 
-                    SectionView(title: "Balance Sheet Data (Stichtag 31.12.)") {
+                    SectionView(title: "Balance Sheet Data (as of 31 December)") {
                         CardView {
                             VStack(spacing: 12) {
                                 TextField("Liquid assets (bank/cash) in CHF", value: $inputLiquidAssets, format: .number.precision(.fractionLength(0...2)))
@@ -145,7 +145,7 @@ struct AnnualReportView: View {
     private func pdfPreviewSheet(for item: PDFPreview) -> some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Erfolgsrechnung \(FiscalCalendar.yearText(selectedYear))")
+                Text("Income Statement \(FiscalCalendar.yearText(selectedYear))")
                     .font(.headline)
                 Spacer()
 

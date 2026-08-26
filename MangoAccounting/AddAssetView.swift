@@ -162,7 +162,7 @@ struct AddAssetView: View {
                             VStack(spacing: 12) {
                                 Picker("Asset Class (ESTV)", selection: $selectedAssetCategory) {
                                     ForEach(AssetCategory.allCases) { category in
-                                        Text(category.rawValue).tag(category)
+                                        Text(LocalizedStringKey(category.rawValue)).tag(category)
                                     }
                                 }
                                 .pickerStyle(.menu)

@@ -5,6 +5,15 @@ enum AnnualReportPDFPage {
     case balanceSheet
 }
 
+/// The printed annual report.
+///
+/// Its headings are deliberately German in every app language — "ERFOLGSRECHNUNG",
+/// "BILANZ", "Jahresgewinn" and the rest. This is the statement handed to the
+/// Swiss tax authority, and the German terms are what that document is expected
+/// to carry, whichever language the app's own interface is set to. The in-app
+/// summary on the Annual Report tab *is* localised; only this page is fixed.
+///
+/// So: leave the German literals here alone. They are not untranslated strings.
 struct AnnualReportPDFView: View {
     let year: Int
     let user: UserSettings
