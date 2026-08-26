@@ -7,6 +7,8 @@ import CoreData
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var settings = UserSettings()
+    @AppStorage(AppAppearance.storageKey) private var appearanceRaw: String =
+        AppAppearance.defaultValue.rawValue
     
     var body: some View {
         settingsForm
@@ -44,16 +46,36 @@ struct SettingsView: View {
                     .cornerRadius(12)
                 }
                 
-                 #if os(iOS)
                 SectionView(title: "Appearance") {
-                    CardView {
-                        NavigationLink(destination: TabOrderSettingsView(settings: settings)) {
-                            Text("Customize Tab Order")
-                                .foregroundColor(AppTheme.accent)
+                    Picker("Appearance", selection: $appearanceRaw) {
+                        ForEach(AppAppearance.allCases) { option in
+                            Label(option.label, systemImage: option.symbolName)
+                                .tag(option.rawValue)
                         }
                     }
+                    .pickerStyle(.segmented)
+                    .padding(4)
+                    .background(AppTheme.cardBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadius, style: .continuous))
                 }
-                #endif
+
+                // Was gated to iOS, yet macOS is the only platform that actually
+                // uses tabOrder — through the custom tab bar — so macOS users had
+                // no way to reorder their tabs at all.
+                SectionView(title: "Tabs") {
+                    CardView {
+                        NavigationLink(destination: TabOrderSettingsView(settings: settings)) {
+                            HStack {
+                                Text("Customize Tab Order")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.weight(.semibold))
+                            }
+                            .foregroundColor(AppTheme.accent)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
             .padding()
         }

@@ -8,20 +8,31 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var userSettings = UserSettings()
+    // Read straight from UserDefaults rather than through UserSettings.
+    //
+    // `@AppStorage` only publishes changes when it is installed on a View. Inside
+    // an ObservableObject it writes through but never notifies, and each screen
+    // held its own instance — which is why switching language did nothing until
+    // the app was relaunched. Declared here, these observe the same keys the
+    // Settings screen writes and update immediately.
+    @AppStorage("language") private var language: String = "en"
+    @AppStorage(AppAppearance.storageKey) private var appearanceRaw: String =
+        AppAppearance.defaultValue.rawValue
+
+    private var appearance: AppAppearance {
+        AppAppearance(rawValue: appearanceRaw) ?? .defaultValue
+    }
 
     var body: some View {
         ContentView()
-            // This forces the entire view hierarchy to re-render
-            // with the new language when the setting changes.
-            //
-            // Deliberately the raw language, not `formattingLocaleIdentifier`:
-            // SwiftUI looks up localized strings through this locale, and "frk"
+            // Deliberately the raw language, not a resolvable formatting locale:
+            // SwiftUI looks up localized strings through this, and "frk"
             // (Oberfränkisch) has to stay here for its translations to resolve.
             // Output where formatting conventions matter — the generated PDFs —
-            // passes the resolvable locale to its renderer explicitly.
-            .environment(\.locale, Locale(identifier: userSettings.language))
-            // By adding an id that changes, we tell SwiftUI the view is completely new.
-            .id(userSettings.language)
+            // passes a resolvable locale to its renderer explicitly.
+            .environment(\.locale, Locale(identifier: language))
+            .preferredColorScheme(appearance.colorScheme)
+            // Rebuilds the hierarchy so every localized string is re-read.
+            .id(language)
     }
 }

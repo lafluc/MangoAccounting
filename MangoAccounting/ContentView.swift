@@ -32,7 +32,6 @@ struct ContentView: View {
             }
             #endif
         }
-        .preferredColorScheme(.dark) // ADDITION: This line locks the app to dark mode.
         .onAppear(perform: loadTabOrder)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppTheme.background)
