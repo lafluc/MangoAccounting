@@ -12,6 +12,22 @@ struct TransactionDetailView: View {
     @State private var showEditSheet = false
 
     var body: some View {
+        // After a delete, `dismiss()` on a pushed destination does not reliably pop
+        // in the macOS split view, and the body would then re-evaluate against a
+        // deleted object — nil-and-zero garbage at best, a raised exception at
+        // worst.
+        if transaction.isDeleted || transaction.managedObjectContext == nil {
+            PlaceholderView(
+                systemImageName: "trash",
+                title: "Transaction Deleted",
+                subtitle: "Pick another entry from the list."
+            )
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 attachmentView // Updated view for attachments
@@ -151,11 +167,15 @@ struct TransactionDetailView: View {
         dismiss()
     }
     
+    /// `value` is user-entered text — a description or a category the user named —
+    /// so it is rendered verbatim. Passing it through `LocalizedStringKey` meant a
+    /// description that happened to match a catalog key was silently replaced by
+    /// its translation, and any "%" or "@" in it was read as a format specifier.
     private func detailRow(label: String, value: String) -> some View {
         HStack {
             Text(LocalizedStringKey(label)).foregroundColor(AppTheme.textSecondary)
             Spacer()
-            Text(LocalizedStringKey(value)).fontWeight(.medium).foregroundColor(AppTheme.textPrimary)
+            Text(verbatim: value).fontWeight(.medium).foregroundColor(AppTheme.textPrimary)
         }.padding()
     }
     

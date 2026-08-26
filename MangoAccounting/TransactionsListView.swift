@@ -14,7 +14,7 @@ struct TransactionsListView: View {
     @State private var selectedCategory: String = "All"
     
     // NEW: Yearly Partitioning State
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedYear: Int = FiscalCalendar.year(of: Date())
 
     enum SortOption: String, CaseIterable {
         case dateDescending = "Newest First"
@@ -33,8 +33,14 @@ struct TransactionsListView: View {
     @FetchRequest private var transactions: FetchedResults<TransactionItem>
 
     init() {
+        // Predicated from the start. Built unfiltered before, so the first frame
+        // rendered every transaction of every year and then animated them away.
+        let bounds = FiscalCalendar.yearBounds(FiscalCalendar.year(of: Date()))
         _transactions = FetchRequest<TransactionItem>(
             sortDescriptors: [NSSortDescriptor(keyPath: \TransactionItem.date, ascending: false)],
+            predicate: NSPredicate(
+                format: "date >= %@ AND date < %@", bounds.start as NSDate, bounds.end as NSDate
+            ),
             animation: .default
         )
     }
@@ -50,38 +56,41 @@ struct TransactionsListView: View {
         }
     }
     
+    /// True when the list is empty because of the current year, type or category
+    /// selection rather than because the ledger holds nothing at all.
+    private var isEmptyDueToSelection: Bool {
+        !allTransactionYears.isEmpty
+            || selectedFilterOption != .all
+            || selectedCategory != "All"
+    }
+
     private var availableCategories: [String] {
         let allCats = categoryManager.incomeCategories + categoryManager.expenseCategories
         return ["All"] + Array(Set(allCats)).sorted()
     }
     
-    // Calculate available years from existing data + current year
+    /// Years the user can switch to: every year that actually holds data, plus the
+    /// current one and whatever is selected.
+    ///
+    /// This used to hardcode `currentYear-5 ... currentYear+1`, which made older
+    /// transactions unreachable from this tab entirely.
     private var availableYears: [Int] {
-        let currentYear = Calendar.current.component(.year, from: Date())
-        var years = Set<Int>()
-        years.insert(currentYear)
-        
-        // We need a separate fetch to find all years, or we just rely on what is loaded.
-        // A simple heuristic for the UI: current year +/- 5 years is usually enough for a picker,
-        // but let's try to be smart.
-        // For simplicity in this view, we will offer a range.
-        return (currentYear-5...currentYear+1).map { $0 }.sorted(by: >)
-    }
-    
-    // Formatter to remove comma from year (2,025 -> 2025)
-    private var yearFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .none
-        formatter.groupingSeparator = ""
-        return formatter
+        var years = Set(allTransactionYears)
+        years.insert(FiscalCalendar.year(of: Date()))
+        years.insert(selectedYear)
+        return years.sorted(by: >)
     }
 
     @State private var showAddSheet = false
-    @State private var transactionToDelete: TransactionItem?
-    @State private var offsetsToDelete: IndexSet?
-    @State private var showDeleteConfirmation = false
+    /// Rows awaiting delete confirmation. Replaces a `TransactionItem?` plus an
+    /// `IndexSet?` that was never assigned, which made a multi-row delete drop
+    /// everything but the first row.
+    @State private var transactionsToDelete: [TransactionItem]?
     @State private var saveErrorMessage: String?
     @State private var transactionToDuplicate: ManagedObjectBox<TransactionItem>?
+    /// Years the ledger spans, loaded once so the picker is not limited to a
+    /// hardcoded window around today.
+    @State private var allTransactionYears: [Int] = []
 
     var body: some View {
         NavigationView {
@@ -98,15 +107,15 @@ struct TransactionsListView: View {
                                 selectedYear = year
                             } label: {
                                 if selectedYear == year {
-                                    Label(yearFormatter.string(from: NSNumber(value: year)) ?? "", systemImage: "checkmark")
+                                    Label(FiscalCalendar.yearText(year), systemImage: "checkmark")
                                 } else {
-                                    Text(yearFormatter.string(from: NSNumber(value: year)) ?? "")
+                                    Text(FiscalCalendar.yearText(year))
                                 }
                             }
                         }
                     } label: {
                         HStack {
-                            Text(yearFormatter.string(from: NSNumber(value: selectedYear)) ?? "")
+                            Text(FiscalCalendar.yearText(selectedYear))
                                 .font(.headline)
                                 .foregroundColor(AppTheme.accent)
                             Image(systemName: "chevron.down")
@@ -150,21 +159,24 @@ struct TransactionsListView: View {
         .onChange(of: selectedCategory) { updateFetchRequest() }
         // Update fetch request when year changes
         .onChange(of: selectedYear) { updateFetchRequest() }
-        .onAppear { updateFetchRequest() } // Ensure correct filter on load
-        .alert("Are you sure?", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) {
-                if let transaction = transactionToDelete {
-                    delete(transaction: transaction)
-                } else if let offsets = offsetsToDelete {
-                    deleteItems(at: offsets)
-                }
-            }
-            Button("Cancel", role: .cancel) {
-                transactionToDelete = nil
-                offsetsToDelete = nil
-            }
-        } message: {
-            Text("This transaction will be permanently deleted.")
+        .onAppear {
+            updateFetchRequest()
+            allTransactionYears = TransactionYears.spanned(in: viewContext)
+        }
+        .alert(
+            "Are you sure?",
+            isPresented: Binding(
+                get: { transactionsToDelete != nil },
+                set: { if !$0 { transactionsToDelete = nil } }
+            ),
+            presenting: transactionsToDelete
+        ) { targets in
+            Button("Delete", role: .destructive) { delete(targets) }
+            Button("Cancel", role: .cancel) { transactionsToDelete = nil }
+        } message: { targets in
+            Text(targets.count == 1
+                 ? "This transaction will be permanently deleted."
+                 : "These \(targets.count) transactions will be permanently deleted.")
         }
         .alert(
             "Could Not Save",
@@ -188,11 +200,19 @@ struct TransactionsListView: View {
     @ViewBuilder
     private var listBody: some View {
         if transactions.isEmpty && searchQuery.isEmpty {
-            PlaceholderView(
-                systemImageName: "tray.fill",
-                title: "No Transactions Yet",
-                subtitle: "Tap the ‘+’ button to add your first income or expense entry for this year."
-            )
+            if isEmptyDueToSelection {
+                PlaceholderView(
+                    systemImageName: "line.3.horizontal.decrease.circle",
+                    title: "Nothing Matches These Filters",
+                    subtitle: "No transactions in this year, type or category. Try a different fiscal year or clear the filters."
+                )
+            } else {
+                PlaceholderView(
+                    systemImageName: "tray.fill",
+                    title: "No Transactions Yet",
+                    subtitle: "Use the ‘+’ button to add your first income or expense entry for this year."
+                )
+            }
         } else {
             List {
                 ForEach(filteredTransactions, id: \.objectID) { transaction in
@@ -271,20 +291,12 @@ struct TransactionsListView: View {
         
         var predicates: [NSPredicate] = []
         
-        // Date Filter for selected Year
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.year = selectedYear
-        components.day = 1
-        components.month = 1
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
-        
-        if let startDate = calendar.date(from: components),
-           let endDate = calendar.date(byAdding: .year, value: 1, to: startDate) {
-            predicates.append(NSPredicate(format: "date >= %@ AND date < %@", startDate as NSDate, endDate as NSDate))
-        }
+        // Date filter for the selected year, against a fixed calendar so the
+        // boundary does not move with the device's time zone.
+        let bounds = FiscalCalendar.yearBounds(selectedYear)
+        predicates.append(NSPredicate(
+            format: "date >= %@ AND date < %@", bounds.start as NSDate, bounds.end as NSDate
+        ))
 
         switch selectedFilterOption {
             case .income:
@@ -304,30 +316,27 @@ struct TransactionsListView: View {
     }
 
     private func confirmDelete(transaction: TransactionItem) {
-        self.transactionToDelete = transaction
-        self.showDeleteConfirmation = true
+        self.transactionsToDelete = [transaction]
     }
 
     private func confirmDelete(at offsets: IndexSet) {
-        if let index = offsets.first {
-            self.transactionToDelete = filteredTransactions[index]
-            self.showDeleteConfirmation = true
-        }
+        // Resolve to objects now: the confirmation is asynchronous, and indices
+        // into a recomputed array can point at different rows by the time it is
+        // answered — or out of bounds if the array shrank.
+        let rows = filteredTransactions
+        let targets = offsets.compactMap { $0 < rows.count ? rows[$0] : nil }
+        guard !targets.isEmpty else { return }
+        self.transactionsToDelete = targets
     }
 
-    private func delete(transaction: TransactionItem) {
+    private func delete(_ targets: [TransactionItem]) {
         withAnimation {
-            viewContext.delete(transaction)
+            for target in targets where !target.isDeleted {
+                viewContext.delete(target)
+            }
             saveContext()
         }
-    }
-
-    private func deleteItems(at offsets: IndexSet) {
-        withAnimation {
-            let itemsToDelete = offsets.map { filteredTransactions[$0] }
-            itemsToDelete.forEach(viewContext.delete)
-            saveContext()
-        }
+        transactionsToDelete = nil
     }
     
     private func saveContext() {
