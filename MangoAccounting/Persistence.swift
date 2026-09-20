@@ -104,6 +104,14 @@ final class PersistenceController: ObservableObject {
             if inMemory {
                 description.url = URL(fileURLWithPath: "/dev/null")
             }
+            #if DEBUG
+            // UI tests run against a disposable store so they are reproducible and
+            // never touch the user's real database.
+            if !inMemory, UITestSupport.isActive {
+                UITestSupport.resetSupportingState()
+                description.url = UITestSupport.makeCleanStoreURL()
+            }
+            #endif
             // Lightweight migration: adding entities or optional attributes is
             // inferred automatically, which is how every model change so far has
             // reached existing users.
@@ -116,6 +124,12 @@ final class PersistenceController: ObservableObject {
 
         self.container = container
         self.loadFailure = Self.attachStores(to: container)
+
+        #if DEBUG
+        if !inMemory, UITestSupport.isActive, loadFailure == nil {
+            UITestSupport.seed(into: container.viewContext)
+        }
+        #endif
     }
 
     // MARK: - Loading
