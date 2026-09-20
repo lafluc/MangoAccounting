@@ -9,13 +9,23 @@ struct AssetsListView: View {
         animation: .default)
     private var assets: FetchedResults<AssetItem>
     
-    @State private var showAddSheet = false
-    @State private var assetToEdit: ManagedObjectBox<AssetItem>?
-    
-    // Deletion State
-    @State private var assetToDelete: AssetItem?
-    @State private var showDeleteConfirmation = false
-    @State private var deleteErrorMessage: String?
+    /// Which editor sheet is open. One piece of state, not one flag per sheet:
+    /// SwiftUI honours a single `.sheet` modifier per view, so the two stacked
+    /// here meant only one of Add and Edit ever opened.
+    private enum ActiveSheet: Identifiable {
+        case add
+        case edit(ManagedObjectBox<AssetItem>)
+
+        var id: String {
+            switch self {
+            case .add: return "add"
+            case .edit(let box): return "edit:\(box.id)"
+            }
+        }
+    }
+
+    @State private var activeSheet: ActiveSheet?
+    @State private var alert: AlertRequest?
 
     var body: some View {
         NavigationView {
@@ -30,17 +40,21 @@ struct AssetsListView: View {
                     List {
                         ForEach(assets, id: \.objectID) { asset in
                             Button {
-                                assetToEdit = ManagedObjectBox(asset)
+                                activeSheet = .edit(ManagedObjectBox(asset))
                             } label: {
                                 AssetRowView(asset: asset)
+                                    // The row is mostly Spacer, which is not
+                                    // hit-testable, so clicking an asset only
+                                    // opened the editor when the pointer was over
+                                    // its name.
+                                    .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             .listRowBackground(Color.clear)
                             // Right-click context menu for macOS
                             .contextMenu {
                                 Button(role: .destructive) {
-                                    assetToDelete = asset
-                                    showDeleteConfirmation = true
+                                    requestDelete(asset)
                                 } label: {
                                     Label("Delete Asset", systemImage: "trash")
                                 }
@@ -54,48 +68,37 @@ struct AssetsListView: View {
             .navigationTitle("Business Assets")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button { showAddSheet = true } label: { Label("Add", systemImage: "plus.circle.fill") }
+                    Button { activeSheet = .add } label: { Label("Add", systemImage: "plus.circle.fill") }
                     .tint(AppTheme.accent)
                 }
             }
-            .sheet(isPresented: $showAddSheet) {
+            .sheet(item: $activeSheet) { sheet in
                 NavigationStack {
-                    AddAssetView()
-                }
-                .frame(minWidth: 500, minHeight: 650)
-            }
-            .sheet(item: $assetToEdit) { box in
-                NavigationStack {
-                    AddAssetView(assetToEdit: box.object)
-                }
-                .frame(minWidth: 500, minHeight: 650)
-            }
-            // Deletion Safety Alert
-            .alert("Delete Asset", isPresented: $showDeleteConfirmation) {
-                Button("Delete", role: .destructive) {
-                    if let asset = assetToDelete {
-                        viewContext.delete(asset)
-                        if let message = viewContext.saveOrRollback() {
-                            deleteErrorMessage = message
-                        }
+                    switch sheet {
+                    case .add:
+                        AddAssetView()
+                    case .edit(let box):
+                        AddAssetView(assetToEdit: box.object)
                     }
                 }
-                Button("Cancel", role: .cancel) {
-                    assetToDelete = nil
-                }
-            } message: {
-                Text("Are you sure you want to delete this asset? This action cannot be undone.")
+                .frame(minWidth: 500, minHeight: 650)
             }
-            .alert(
-                "Could Not Delete",
-                isPresented: Binding(
-                    get: { deleteErrorMessage != nil },
-                    set: { if !$0 { deleteErrorMessage = nil } }
-                )
-            ) {
-                Button("OK", role: .cancel) { deleteErrorMessage = nil }
-            } message: {
-                Text(deleteErrorMessage ?? "")
+            .appAlert($alert)
+        }
+    }
+}
+
+private extension AssetsListView {
+
+    func requestDelete(_ asset: AssetItem) {
+        alert = .confirm(
+            title: "Delete Asset",
+            message: Text("Are you sure you want to delete this asset? This action cannot be undone."),
+            label: "Delete"
+        ) {
+            viewContext.delete(asset)
+            if let message = viewContext.saveOrRollback() {
+                alert = .error("Could Not Delete", message)
             }
         }
     }

@@ -7,8 +7,7 @@ struct TransactionDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var transaction: TransactionItem
     
-    @State private var showDeleteConfirmation = false
-    @State private var saveErrorMessage: String?
+    @State private var alert: AlertRequest?
     @State private var showEditSheet = false
 
     var body: some View {
@@ -45,23 +44,7 @@ struct TransactionDetailView: View {
             }
             .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
         }
-        .alert("Are you sure?", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) { deleteTransaction() }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("This transaction will be permanently deleted.")
-        }
-        .alert(
-            "Could Not Delete",
-            isPresented: Binding(
-                get: { saveErrorMessage != nil },
-                set: { if !$0 { saveErrorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { saveErrorMessage = nil }
-        } message: {
-            Text(saveErrorMessage ?? "")
-        }
+        .appAlert($alert)
         #if os(macOS)
         .frame(minWidth: 380, idealWidth: 480, minHeight: 560)
         #endif
@@ -151,17 +134,27 @@ struct TransactionDetailView: View {
             Button { showEditSheet = true } label: { Label("Edit", systemImage: "pencil") }
             .tint(AppTheme.accent)
             
-            Button(role: .destructive) { showDeleteConfirmation = true } label: { Label("Delete", systemImage: "trash") }
+            Button(role: .destructive) { requestDelete() } label: { Label("Delete", systemImage: "trash") }
              .tint(AppTheme.negative)
         }
     }
     
     // MARK: - Helper Functions
     
+    private func requestDelete() {
+        alert = .confirm(
+            title: "Are you sure?",
+            message: Text("This transaction will be permanently deleted."),
+            label: "Delete"
+        ) {
+            deleteTransaction()
+        }
+    }
+
     private func deleteTransaction() {
         viewContext.delete(transaction)
         if let message = viewContext.saveOrRollback() {
-            saveErrorMessage = message
+            alert = .error("Could Not Delete", message)
             return
         }
         dismiss()

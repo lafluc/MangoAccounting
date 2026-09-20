@@ -128,17 +128,21 @@ struct CategoryManagementSheet: View {
             } message: {
                 Text("This will also update all existing transactions that use this category.")
             }
-            .alert(
-                "Could Not Rename",
-                isPresented: Binding(
-                    get: { renameErrorMessage != nil },
-                    set: { if !$0 { renameErrorMessage = nil } }
-                )
-            ) {
-                Button("OK", role: .cancel) { renameErrorMessage = nil }
-            } message: {
-                Text(renameErrorMessage ?? "")
-            }
+        }
+        // Deliberately attached out here rather than beside the rename alert: two
+        // .alert modifiers on the *same* view conflict, but the rename alert
+        // contains a TextField and cannot fold into the shared slot, so this one
+        // lives a level up instead.
+        .alert(
+            "Could Not Rename",
+            isPresented: Binding(
+                get: { renameErrorMessage != nil },
+                set: { if !$0 { renameErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { renameErrorMessage = nil }
+        } message: {
+            Text(renameErrorMessage ?? "")
         }
         #if os(macOS)
         .frame(minWidth: 400, idealWidth: 450, minHeight: 400)

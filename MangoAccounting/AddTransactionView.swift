@@ -39,7 +39,7 @@ struct AddTransactionView: View {
     
     @State private var carKilometers: Double?
     @State private var showCategorySheet = false
-    @State private var saveErrorMessage: String?
+    @State private var alert: AlertRequest?
     @State private var hasLoadedTransaction = false
     /// The rate implied by the stored amounts, kept so an untouched edit re-saves
     /// the original CHF figure instead of one recomputed from a displayed rate.
@@ -146,10 +146,10 @@ struct AddTransactionView: View {
                     attachmentType = "pdf"
                     attachmentFilename = url.lastPathComponent
                 } catch {
-                    saveErrorMessage = error.localizedDescription
+                    alert = .error("Could Not Save", error.localizedDescription)
                 }
             case .failure(let error):
-                saveErrorMessage = error.localizedDescription
+                alert = .error("Could Not Save", error.localizedDescription)
             }
         }
         .onChange(of: type) {
@@ -166,17 +166,7 @@ struct AddTransactionView: View {
             loadTransactionDataOnce()
             allTitleSuggestions = TitleSuggestionStore.loadAll(in: viewContext)
         }
-        .alert(
-            "Could Not Save",
-            isPresented: Binding(
-                get: { saveErrorMessage != nil },
-                set: { if !$0 { saveErrorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { saveErrorMessage = nil }
-        } message: {
-            Text(saveErrorMessage ?? "")
-        }
+        .appAlert($alert)
     }
 
     private var saveButtonTitle: LocalizedStringKey {
@@ -517,7 +507,7 @@ struct AddTransactionView: View {
         }
 
         if let message = viewContext.saveOrRollback() {
-            saveErrorMessage = message
+            alert = .error("Could Not Save", message)
             return
         }
         // Add currency to used list if new

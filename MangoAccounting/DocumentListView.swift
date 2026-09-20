@@ -91,8 +91,7 @@ struct DocumentListView: View {
     // environment, but InvoiceGeneratorView requires this object and would trap if
     // it ever did not — so it is passed explicitly rather than relied upon.
     @EnvironmentObject private var tabManager: TabSelectionManager
-    @State private var documentToDelete: SavedDocument?
-    @State private var showDeleteConfirmation = false
+    @State private var alert: AlertRequest?
     @State private var searchQuery: String = ""
     
     @State private var isExporting = false
@@ -116,11 +115,6 @@ struct DocumentListView: View {
         }
         .onAppear { viewModel.reloadDocuments() }
         .onChange(of: searchQuery) { viewModel.filter(with: searchQuery) }
-        .alert("Delete File", isPresented: $showDeleteConfirmation, presenting: documentToDelete) { doc in
-            Button("Delete", role: .destructive) { viewModel.delete(document: doc) }
-        } message: { doc in
-            Text(String.localizedStringWithFormat(NSLocalizedString("This file (%@) will be permanently deleted.", comment: ""), doc.fileName))
-        }
         .sheet(item: $invoiceEditorTarget, onDismiss: { viewModel.reloadDocuments() }) { target in
             NavigationStack {
                 InvoiceGeneratorView(
@@ -136,16 +130,14 @@ struct DocumentListView: View {
                 viewModel.errorMessage = error.localizedDescription
             }
         }
-        .alert(
-            "Saved Files",
-            isPresented: Binding(
-                get: { viewModel.errorMessage != nil },
-                set: { if !$0 { viewModel.errorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { viewModel.errorMessage = nil }
-        } message: {
-            Text(viewModel.errorMessage ?? "")
+        .appAlert($alert)
+        // The view model reports store failures; surface them through the same
+        // single alert slot rather than a second .alert modifier, which SwiftUI
+        // would silently ignore.
+        .onChange(of: viewModel.errorMessage) {
+            guard let message = viewModel.errorMessage else { return }
+            alert = .error("Saved Files", message)
+            viewModel.errorMessage = nil
         }
     }
     
@@ -178,8 +170,7 @@ struct DocumentListView: View {
                             }
                             Divider()
                             Button(role: .destructive) {
-                                self.documentToDelete = doc
-                                self.showDeleteConfirmation = true
+                                requestDelete(doc)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -296,8 +287,9 @@ struct DocumentListView: View {
     
     private func openEditor(for document: SavedDocument) {
         guard let draft = DocumentStore.shared.draft(for: document) else {
-            viewModel.errorMessage = String(
-                localized: "This invoice was saved before editing was supported, so its details are not stored. Use \"Duplicate as New Invoice\" to re-enter them once."
+            alert = .error(
+                "Invoice",
+                String(localized: "This invoice was saved before editing was supported, so its details are not stored. Use \"Duplicate as New Invoice\" to re-enter them once.")
             )
             return
         }
@@ -322,9 +314,21 @@ struct DocumentListView: View {
 
     // CORRECTION: This function was missing and has been re-added.
     private func confirmDelete(at offsets: IndexSet) {
-        if let index = offsets.first {
-            self.documentToDelete = viewModel.documents[index]
-            self.showDeleteConfirmation = true
+        let rows = viewModel.documents
+        guard let index = offsets.first, index < rows.count else { return }
+        requestDelete(rows[index])
+    }
+
+    private func requestDelete(_ document: SavedDocument) {
+        alert = .confirm(
+            title: "Delete File",
+            message: Text(String.localizedStringWithFormat(
+                NSLocalizedString("This file (%@) will be permanently deleted.", comment: ""),
+                document.fileName
+            )),
+            label: "Delete"
+        ) {
+            viewModel.delete(document: document)
         }
     }
 }

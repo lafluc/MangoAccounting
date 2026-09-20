@@ -40,8 +40,7 @@ struct AddAssetView: View {
     @State private var originalPriceInput: Double?
     @State private var exchangeRate: Double = 1.0
 
-    @State private var showDeleteConfirmation = false
-    @State private var saveErrorMessage: String?
+    @State private var alert: AlertRequest?
     @State private var hasLoadedAsset = false
     /// True while `loadAssetOnce()` writes stored values into the form, so the
     /// pickers' onChange handlers stand down.
@@ -232,26 +231,8 @@ struct AddAssetView: View {
                     .keyboardShortcut(.defaultAction)
             }
         }
-        .alert(
-            "Could Not Save",
-            isPresented: Binding(
-                get: { saveErrorMessage != nil },
-                set: { if !$0 { saveErrorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { saveErrorMessage = nil }
-        } message: {
-            Text(saveErrorMessage ?? "")
-        }
+        .appAlert($alert)
         .task { loadAssetOnce() }
-        .alert("Delete Asset", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) {
-                deleteAsset()
-            }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Are you sure you want to delete this asset? This action cannot be undone.")
-        }
     }
 
     /// Whether the amount, currency and rate are all exactly as stored.
@@ -315,7 +296,13 @@ struct AddAssetView: View {
     private var deleteSection: some View {
         if assetToEdit != nil {
             Button("Delete Asset", role: .destructive) {
-                showDeleteConfirmation = true
+                alert = .confirm(
+                    title: "Delete Asset",
+                    message: Text("Are you sure you want to delete this asset? This action cannot be undone."),
+                    label: "Delete"
+                ) {
+                    deleteAsset()
+                }
             }
             // A destructive action used to render as the same mango pill as the
             // primary Save button right above it.
@@ -370,7 +357,7 @@ struct AddAssetView: View {
         asset.originalPrice = original
 
         if let message = viewContext.saveOrRollback() {
-            saveErrorMessage = message
+            alert = .error("Could Not Save", message)
             return
         }
         userSettings.addCurrency(selectedCurrency)
@@ -383,7 +370,7 @@ struct AddAssetView: View {
         if let message = viewContext.saveOrRollback() {
             // Without the rollback in saveOrRollback the asset would vanish from
             // the UI but survive on disk, reappearing on the next launch.
-            saveErrorMessage = message
+            alert = .error("Could Not Save", message)
             return
         }
         dismiss()
