@@ -162,6 +162,10 @@ struct RecentTransactionsSection: View {
                             NavigationLink(destination: TransactionDetailView(transaction: t)) {
                                 TransactionRowView(transaction: t)
                                     .padding(.vertical, 8) // Adjusted padding
+                                    // The row is mostly Spacer, and a Spacer is
+                                    // not hit-testable: without this, clicking
+                                    // anywhere but the text did nothing.
+                                    .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             if t.objectID != transactions.last?.objectID {

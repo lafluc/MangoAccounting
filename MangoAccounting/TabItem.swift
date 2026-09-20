@@ -26,13 +26,20 @@ enum TabItem: String, Codable, CaseIterable, Identifiable {
     @ViewBuilder
     var view: some View {
         switch self {
-        case .dashboard: DashboardView()
+        // These three bring their own navigation container (a split view), so
+        // they must not be wrapped in another one.
         case .transactions: TransactionsListView()
-        case .assets: AssetsListView() // NEW
-        case .annualReport: AnnualReportView()
-        case .newInvoice: InvoiceGeneratorView()
+        case .assets: AssetsListView()
         case .saved: DocumentListView()
-        case .settings: SettingsView()
+
+        // These four have NavigationLinks and navigation titles but no container
+        // of their own. Without this the links did nothing at all when clicked —
+        // Settings' "Customize Tab Order" and the Dashboard's recent-transaction
+        // rows among them — and the titles never appeared.
+        case .dashboard: NavigationStack { DashboardView() }
+        case .annualReport: NavigationStack { AnnualReportView() }
+        case .newInvoice: NavigationStack { InvoiceGeneratorView() }
+        case .settings: NavigationStack { SettingsView() }
         }
     }
 }

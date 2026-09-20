@@ -27,6 +27,7 @@ struct LineItemRowView: View {
             .buttonStyle(.plain)
             .foregroundColor(AppTheme.negative)
             .help("Remove this line")
+            .accessibilityLabel("Remove this line")
         }
     }
 }

@@ -72,6 +72,10 @@ struct SettingsView: View {
                                     .font(.caption.weight(.semibold))
                             }
                             .foregroundColor(AppTheme.accent)
+                            // Most of this row is Spacer, which is not
+                            // hit-testable. Clicking the row did nothing unless
+                            // the pointer happened to be over the words.
+                            .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                     }
