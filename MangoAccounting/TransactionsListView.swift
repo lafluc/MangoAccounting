@@ -81,126 +81,38 @@ struct TransactionsListView: View {
         return years.sorted(by: >)
     }
 
-    @State private var showAddSheet = false
-    /// Rows awaiting delete confirmation. Replaces a `TransactionItem?` plus an
-    /// `IndexSet?` that was never assigned, which made a multi-row delete drop
-    /// everything but the first row.
-    @State private var transactionsToDelete: [TransactionItem]?
-    @State private var saveErrorMessage: String?
-    @State private var transactionToDuplicate: ManagedObjectBox<TransactionItem>?
+    /// Which editor sheet is open, if any.
+    ///
+    /// One piece of state, not one flag per sheet: SwiftUI honours a single
+    /// `.sheet` modifier per view, so two stacked modifiers meant Duplicate
+    /// silently did nothing.
+    private enum ActiveSheet: Identifiable {
+        case add
+        case duplicate(ManagedObjectBox<TransactionItem>)
+
+        var id: String {
+            switch self {
+            case .add: return "add"
+            case .duplicate(let box): return "duplicate:\(box.id)"
+            }
+        }
+    }
+
+    @State private var activeSheet: ActiveSheet?
+    @State private var alert: AlertRequest?
     /// Years the ledger spans, loaded once so the picker is not limited to a
     /// hardcoded window around today.
     @State private var allTransactionYears: [Int] = []
 
     var body: some View {
+        // Two explicit columns. When these were written inline, adding the detail
+        // placeholder silently re-bound the toolbar and both sheets to it — so the
+        // Add button moved to the detail pane and vanished as soon as a row was
+        // selected, and Duplicate's sheet was attached to a view that no longer
+        // existed. Naming the columns makes the attachment unambiguous.
         NavigationView {
-            VStack(spacing: 0) {
-                // Year Partition Header
-                HStack {
-                    Text("Fiscal Year:")
-                        .font(.headline)
-                        .foregroundColor(AppTheme.textSecondary)
-                    
-                    Menu {
-                        ForEach(availableYears, id: \.self) { year in
-                            Button {
-                                selectedYear = year
-                            } label: {
-                                if selectedYear == year {
-                                    Label(FiscalCalendar.yearText(year), systemImage: "checkmark")
-                                } else {
-                                    Text(FiscalCalendar.yearText(year))
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text(FiscalCalendar.yearText(selectedYear))
-                                .font(.headline)
-                                .foregroundColor(AppTheme.accent)
-                            Image(systemName: "chevron.down")
-                                .font(.caption)
-                                .foregroundColor(AppTheme.accent)
-                        }
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 12)
-                        .background(AppTheme.cardBackground)
-                        .cornerRadius(8)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(AppTheme.background)
-
-                listBody
-            }
-            .searchable(text: $searchQuery, prompt: "Search by description or category")
-            .navigationTitle("Transactions")
-            #if os(macOS)
-            // The list is the sidebar of a split view and at its default width
-            // every row truncated to an ellipsis.
-            .frame(minWidth: 340, idealWidth: 400)
-            #endif
-
-            // Detail placeholder. Without it the right-hand pane is simply blank
-            // on a wide window.
-            PlaceholderView(
-                systemImageName: "list.bullet.rectangle",
-                title: "No Transaction Selected",
-                subtitle: "Choose an entry to see its details and attachment."
-            )
-            .toolbar { mainToolbar }
-            .sheet(isPresented: $showAddSheet) {
-                NavigationStack {
-                    AddTransactionView()
-                }
-                // A macOS sheet is sized from the fitting size of its root, and a
-                // NavigationView/Stack does not forward its child's minimums. The
-                // frame has to be here, not inside AddTransactionView.
-                .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
-            }
-            .sheet(item: $transactionToDuplicate) { source in
-                NavigationStack {
-                    AddTransactionView(prefillSource: source.object)
-                }
-                .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
-            }
-        }
-        .onChange(of: selectedSortOption) { updateFetchRequest() }
-        .onChange(of: selectedFilterOption) { updateFetchRequest() }
-        .onChange(of: selectedCategory) { updateFetchRequest() }
-        // Update fetch request when year changes
-        .onChange(of: selectedYear) { updateFetchRequest() }
-        .onAppear {
-            updateFetchRequest()
-            allTransactionYears = TransactionYears.spanned(in: viewContext)
-        }
-        .alert(
-            "Are you sure?",
-            isPresented: Binding(
-                get: { transactionsToDelete != nil },
-                set: { if !$0 { transactionsToDelete = nil } }
-            ),
-            presenting: transactionsToDelete
-        ) { targets in
-            Button("Delete", role: .destructive) { delete(targets) }
-            Button("Cancel", role: .cancel) { transactionsToDelete = nil }
-        } message: { targets in
-            Text(targets.count == 1
-                 ? "This transaction will be permanently deleted."
-                 : "These \(targets.count) transactions will be permanently deleted.")
-        }
-        .alert(
-            "Could Not Save",
-            isPresented: Binding(
-                get: { saveErrorMessage != nil },
-                set: { if !$0 { saveErrorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) { saveErrorMessage = nil }
-        } message: {
-            Text(saveErrorMessage ?? "")
+            sidebarColumn
+            detailPlaceholder
         }
         #if os(iOS)
         .navigationViewStyle(.stack)
@@ -208,6 +120,92 @@ struct TransactionsListView: View {
         #if os(macOS)
         .frame(minWidth: 700, minHeight: 620)
         #endif
+    }
+
+    private var sidebarColumn: some View {
+        VStack(spacing: 0) {
+            fiscalYearHeader
+            listBody
+        }
+        .searchable(text: $searchQuery, prompt: "Search by description or category")
+        .navigationTitle("Transactions")
+        .toolbar { mainToolbar }
+        #if os(macOS)
+        // The list is the sidebar of a split view and at its default width every
+        // row truncated to an ellipsis.
+        .frame(minWidth: 340, idealWidth: 400)
+        #endif
+        .sheet(item: $activeSheet) { sheet in
+            NavigationStack {
+                switch sheet {
+                case .add:
+                    AddTransactionView()
+                case .duplicate(let box):
+                    AddTransactionView(prefillSource: box.object)
+                }
+            }
+            // A macOS sheet is sized from the fitting size of its root, and a
+            // NavigationStack does not forward its child's minimums. The frame has
+            // to be here, not inside AddTransactionView.
+            .frame(minWidth: 520, idealWidth: 560, minHeight: 560, idealHeight: 680)
+        }
+        .appAlert($alert)
+        .onChange(of: selectedSortOption) { updateFetchRequest() }
+        .onChange(of: selectedFilterOption) { updateFetchRequest() }
+        .onChange(of: selectedCategory) { updateFetchRequest() }
+        .onChange(of: selectedYear) { updateFetchRequest() }
+        .onAppear {
+            updateFetchRequest()
+            allTransactionYears = TransactionYears.spanned(in: viewContext)
+        }
+    }
+
+    private var detailPlaceholder: some View {
+        PlaceholderView(
+            systemImageName: "list.bullet.rectangle",
+            title: "No Transaction Selected",
+            subtitle: "Choose an entry to see its details and attachment."
+        )
+    }
+
+    private var fiscalYearHeader: some View {
+        HStack {
+            Text("Fiscal Year:")
+                .font(.headline)
+                .foregroundColor(AppTheme.textSecondary)
+
+            Menu {
+                ForEach(availableYears, id: \.self) { year in
+                    Button {
+                        selectedYear = year
+                    } label: {
+                        if selectedYear == year {
+                            Label(FiscalCalendar.yearText(year), systemImage: "checkmark")
+                        } else {
+                            Text(FiscalCalendar.yearText(year))
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(FiscalCalendar.yearText(selectedYear))
+                        .font(.headline)
+                        .foregroundColor(AppTheme.accent)
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                        .foregroundColor(AppTheme.accent)
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(8)
+            }
+            .accessibilityLabel("Fiscal Year")
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(AppTheme.background)
     }
 
     @ViewBuilder
@@ -235,7 +233,7 @@ struct TransactionsListView: View {
                     .listRowBackground(Color.clear)
                     .contextMenu {
                         Button {
-                            transactionToDuplicate = ManagedObjectBox(transaction)
+                            activeSheet = .duplicate(ManagedObjectBox(transaction))
                         } label: {
                             Label("Duplicate", systemImage: "plus.square.on.square")
                         }
@@ -282,8 +280,9 @@ struct TransactionsListView: View {
                 Label("Sort & Filter", systemImage: "arrow.up.arrow.down.circle")
             }
             .tint(AppTheme.accent)
+            .accessibilityLabel("Sort & Filter")
             
-            Button { showAddSheet = true } label: { Label("Add", systemImage: "plus.circle.fill") }
+            Button { activeSheet = .add } label: { Label("Add", systemImage: "plus.circle.fill") }
             .tint(AppTheme.accent)
         }
     }
@@ -329,7 +328,7 @@ struct TransactionsListView: View {
     }
 
     private func confirmDelete(transaction: TransactionItem) {
-        self.transactionsToDelete = [transaction]
+        requestDelete([transaction])
     }
 
     private func confirmDelete(at offsets: IndexSet) {
@@ -339,7 +338,19 @@ struct TransactionsListView: View {
         let rows = filteredTransactions
         let targets = offsets.compactMap { $0 < rows.count ? rows[$0] : nil }
         guard !targets.isEmpty else { return }
-        self.transactionsToDelete = targets
+        requestDelete(targets)
+    }
+
+    private func requestDelete(_ targets: [TransactionItem]) {
+        alert = .confirm(
+            title: "Are you sure?",
+            message: Text(targets.count == 1
+                          ? "This transaction will be permanently deleted."
+                          : "These \(targets.count) transactions will be permanently deleted."),
+            label: "Delete"
+        ) {
+            delete(targets)
+        }
     }
 
     private func delete(_ targets: [TransactionItem]) {
@@ -349,12 +360,11 @@ struct TransactionsListView: View {
             }
             saveContext()
         }
-        transactionsToDelete = nil
     }
     
     private func saveContext() {
         if let message = viewContext.saveOrRollback() {
-            saveErrorMessage = message
+            alert = .error("Could Not Save", message)
         }
     }
 }
