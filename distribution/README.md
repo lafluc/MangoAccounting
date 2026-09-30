@@ -20,7 +20,7 @@ Picks the best signing you have installed and writes
 | | Developer ID + notarised | Apple Development |
 |---|---|---|
 | Needs | paid Apple Developer Program | free Apple ID |
-| First launch | opens on a double click | Gatekeeper blocks it; user must right-click → Open |
+| First launch | opens on a double click | Gatekeeper blocks it; user allows it once under System Settings → Privacy & Security → Open Anyway (right-click → Open no longer bypasses it on macOS 15+) |
 | What has shipped so far | — | this one |
 
 If `security find-identity -v -p codesigning` lists nothing, open

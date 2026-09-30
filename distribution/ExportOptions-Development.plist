@@ -4,8 +4,8 @@
 <dict>
 	<!-- Fallback for a free Apple ID, which cannot issue a Developer ID
 	     certificate. The result is what has been shipped so far: it runs, but
-	     Gatekeeper blocks the first launch and each user has to right-click the
-	     app and choose Open once. -->
+	     Gatekeeper blocks the first launch and each user has to allow it once
+	     under System Settings > Privacy & Security > Open Anyway. -->
 	<key>method</key>
 	<string>development</string>
 	<key>teamID</key>
