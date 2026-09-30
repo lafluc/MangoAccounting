@@ -63,3 +63,22 @@ xcodebuild test -project MangoAccounting.xcodeproj -scheme MangoAccounting -dest
 The suite includes a test that writes a database with the *shipped* data model and
 reopens it with the current one, which is the guarantee that an update does not
 cost anyone their records. Take that failing as a blocker.
+
+## Publishing a release
+
+Users download from the link in the top-level [README](../README.md#download-and-install),
+which always points at the newest GitHub release. For each new version:
+
+1. Bump the version numbers (above) and run the tests.
+2. Commit and push to `main`.
+3. Build, then publish:
+
+```
+./distribution/build-release.sh
+./distribution/publish-release.sh
+```
+
+`publish-release.sh` refuses to publish a build that doesn't come from the
+current tip of `origin/main` with a clean working tree, or whose version already
+has a release. It uploads the zip as `MangoAccounting.zip` every time. Keep that
+name, because the README's download link depends on it.

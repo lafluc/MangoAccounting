@@ -40,8 +40,15 @@ case "$mode" in
 esac
 
 print "Signing mode: $mode"
-rm -rf "$ARCHIVE" "$BUILD_DIR/export"
+SOURCE_RECORD="$BUILD_DIR/source-commit"
+rm -rf "$ARCHIVE" "$BUILD_DIR/export" "$SOURCE_RECORD"
 mkdir -p "$BUILD_DIR"
+
+# Remember which commit this build came from, so publish-release.sh can refuse
+# to publish a build that doesn't match the code on GitHub.
+source_commit="$(git rev-parse HEAD)"
+source_state="clean"
+[[ -z "$(git status --porcelain)" ]] || source_state="dirty"
 
 # Universal binary, matching what has been shipped before.
 xcodebuild archive \
@@ -75,10 +82,13 @@ lipo -archs "$APP/Contents/MacOS/MangoAccounting" | sed 's/^/  /'
 ZIP="$BUILD_DIR/MangoAccounting-$( /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist" ).zip"
 rm -f "$ZIP"
 ditto -c -k --keepParent "$APP" "$ZIP"
+print "$source_commit $source_state" > "$SOURCE_RECORD"
 
 print "\nBuilt: $APP"
 print "Send:  $ZIP"
+print "From:  $source_commit ($source_state)"
 if [[ "$mode" == "development" ]]; then
-  print "\nNOTE: development-signed. Users must right-click the app and choose Open"
-  print "the first time, because it is not notarised."
+  print "\nNOTE: development-signed and not notarised, so macOS blocks the first"
+  print "launch. Users allow it once under System Settings > Privacy & Security >"
+  print "Open Anyway (see the install section of README.md)."
 fi
